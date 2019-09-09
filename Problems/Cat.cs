@@ -8,9 +8,12 @@ namespace Cat
     {
         public static void Main(string[] args)
         {
-            var shell = new Shell(@"D:\programming\CSharpResearch\ConsoleSample\ConsoleSample\FileService");
-            shell.Cat("FileProcessingService.cs", -1, Encoding.GetEncoding("shift_jis"));
+            Console.WriteLine("Begin: Cat");
 
+            var shell = new Shell(@"D:\programming\CSharpResearch\ConsoleSample\ConsoleSample\FileService");
+            shell.Cat("FileProcessingService.cs", 25, Encoding.GetEncoding("shift_jis"));
+
+            Console.WriteLine("End: Cat");
             Console.ReadKey();
         }
     }
@@ -22,19 +25,23 @@ namespace Cat
 
         public Shell(string dir)
         {
+            if (!Directory.Exists(dir))
+            {
+                throw new ArgumentException($"Directory \"{dir}\" does not exist.");
+            }
             this.Dir = dir;
         }
 
-        public void Cat(string file, int count)
+        public void Cat(string fileName, int count)
         {
-            Cat(file, count, Encoding.UTF8);
+            Cat(fileName, count, Encoding.UTF8);
         }
-        public void Cat(string file, int count, Encoding enc)
+        public void Cat(string fileName, int count, Encoding enc)
         {
-            string path = Path.Combine(this.Dir, file);
+            string path = Path.Combine(this.Dir, fileName);
             if (!File.Exists(path))
             {
-                Console.WriteLine($"File {path} does not exist.");
+                Console.WriteLine($"File \"{path}\" does not exist.");
                 return;
             }
             int maxLine = (0 < count) ? count : DefaultCount;
