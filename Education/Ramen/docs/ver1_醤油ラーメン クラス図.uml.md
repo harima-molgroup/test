@@ -2,30 +2,40 @@
 @startuml
 
 class Chef {
-  + Cook(): ShoyuRamen 
+  + Cook(ramenSkill: IRamenFactory): IRamen 
 }
 
-class ShoyuRamen {
+interface IRamen
+
+class Ramen {
+  + AddNoodle
+  + AddSoup
+  + AddTopping
   + GetCalory(): int
 }
+Ramen ..|> IRamen
 
-class Noodle {
-  + Name: string
-  + Kcal: int
-}
-class Soup {
-  + Name: string
-  + Kcal: int
-}
-class Topping {
-  + Name: string
-  + Kcal: int
-}
+class Noodle 
+class Soup 
+class Topping
 
-Chef -> ShoyuRamen : > 作る
-ShoyuRamen "1" -- "1" Noodle
-ShoyuRamen "1" -- "1" Soup
-ShoyuRamen "1" -- "0..n" Topping
+Chef -> IRamenFactory : > 腕を振るう
+IRamen "1" -- "1" Noodle
+IRamen "1" -- "1" Soup
+IRamen "1" -- "0..n" Topping
+
+interface IRamenFactory {
+  CookRamen()
+}
+IRamenFactory -> IRamen : > 作る
+
+class ShoyuRamenFactory
+class MisoRamenFactory
+class CornButterMisoRamenFactory
+ShoyuRamenFactory ..|> IRamenFactory
+MisoRamenFactory ..|> IRamenFactory
+
+CornButterMisoRamenFactory --|> MisoRamenFactory
 
 @enduml
 ```
