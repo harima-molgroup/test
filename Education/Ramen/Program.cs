@@ -55,51 +55,51 @@ namespace Ramen
 
         public int GetCalory()
         {
-            int kcalSum = 0;
-            kcalSum += _noodle._kcal;
-            kcalSum += _soup._kcal;
+            int calories = 0;
+            calories += _noodle.Kcal;
+            calories += _soup.Kcal;
             foreach (var topping in _toppings)
             {
-                kcalSum += topping._kcal;
+                calories += topping.Kcal;
             }
 
-            return kcalSum;
+            return calories;
         }
     }
 
     public class Noodle
     {
-        public string _name;
-        public int _kcal;
+        public string Name;
+        public int Kcal;
 
         public Noodle(string name, int kcal)
         {
-            _name = name;
-            _kcal = kcal;
+            Name = name;
+            Kcal = kcal;
         }
     }
 
     public class Soup
     {
-        public string _name;
-        public int _kcal;
+        public string Name;
+        public int Kcal;
 
         public Soup(string name, int kcal)
         {
-            _name = name;
-            _kcal = kcal;
+            Name = name;
+            Kcal = kcal;
         }
     }
 
     public class Topping
     {
-        public string _name;
-        public int _kcal;
+        public string Name;
+        public int Kcal;
 
         public Topping(string name, int kcal)
         {
-            _name = name;
-            _kcal = kcal;
+            Name = name;
+            Kcal = kcal;
         }
     }
 }
