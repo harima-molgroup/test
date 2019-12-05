@@ -10,15 +10,19 @@ namespace Ramen
     {
         public static void Main(string[] args)
         {
-            string ramenName = args[0];
+            string ramenName = (args != null || args.Length == 0) ? "shoyu" :
+                                (string.IsNullOrWhiteSpace(args[0])) ? "shoyu" :
+                                args[0];
 
             var oyaji = Order(ramenName);
 
             var ramen = oyaji.Serve();
+            
+            Console.ReadKey();
+
+            // ------------------------------------
 
             oyaji = Order("ヤサイマシニンニクカラメスコシ");
-
-            Console.ReadKey();
         }
 
         private static Master Order(string ramenName)

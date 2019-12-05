@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 14 for Windows Desktop
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ramen", "Ramen\Ramen.csproj", "{233DD10C-D2F0-465B-A943-AC8FE5DE80AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ramen", "Ramen\Ramen.csproj", "{AC553EF7-AF01-4C56-AB6F-CF8604E11BC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{233DD10C-D2F0-465B-A943-AC8FE5DE80AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{233DD10C-D2F0-465B-A943-AC8FE5DE80AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{233DD10C-D2F0-465B-A943-AC8FE5DE80AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{233DD10C-D2F0-465B-A943-AC8FE5DE80AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC553EF7-AF01-4C56-AB6F-CF8604E11BC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC553EF7-AF01-4C56-AB6F-CF8604E11BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC553EF7-AF01-4C56-AB6F-CF8604E11BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC553EF7-AF01-4C56-AB6F-CF8604E11BC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {919B7A26-5B4D-4436-995B-D94B8C5D9934}
 	EndGlobalSection
 EndGlobal
