@@ -18,7 +18,7 @@ deactivate Program
 
 activate Chef
 
-Chef -> Noodle : new("細麺", 300)
+Chef -> Noodle : new("細麺", 300, 1)
 Chef -> Soup : new("醤油スープ", 100)
 Chef -> Tooping : new("チャーシュー", 75)
 Chef -> Tooping : new("メンマ", 50)

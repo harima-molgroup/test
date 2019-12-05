@@ -9,7 +9,7 @@ namespace Ramen.Ver0
         {
             Console.WriteLine($"さあ、醤油ラーメンを作ろう!");
 
-            var noodle = new Noodle("細麺", 300);
+            var noodle = new Noodle("細麺", 300, 1);
             var soup = new Soup("醤油スープ", 100);
 
             var toppings = new List<Topping>();
@@ -57,11 +57,13 @@ namespace Ramen.Ver0
     {
         public string Name;
         public int Kcal;
+        public int Size;
 
-        public Noodle(string name, int kcal)
+        public Noodle(string name, int kcal, int size)
         {
             Name = name;
             Kcal = kcal;
+            Size = size;
         }
     }
 
