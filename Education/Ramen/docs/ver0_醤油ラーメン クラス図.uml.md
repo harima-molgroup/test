@@ -33,6 +33,7 @@ ShoyuRamen "1" --> "1" Soup
 ShoyuRamen "1" --> "0..n" Topping
 
 @enduml
+```
 
 ```
 ラーメンが増えた場合のクラス図 (Cookで作り分ける場合)
@@ -69,6 +70,7 @@ Ramen "1" --> "1" Soup
 Ramen "1" --> "0..n" Topping
 
 @enduml
+```
 
 ```
 ラーメンが増えた場合のクラス図 (種類を増やした場合)
