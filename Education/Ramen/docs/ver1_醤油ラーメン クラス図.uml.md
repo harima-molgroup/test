@@ -1,4 +1,4 @@
-```
+``` uml
 @startuml
 
 class Chef {
