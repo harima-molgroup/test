@@ -1,4 +1,6 @@
-``` 醤油ラーメンのみの場合のクラス図
+``` 醤油ラーメンのみの場合のクラス図 ```
+
+``` uml
 @startuml
 
 class Chef {
@@ -30,7 +32,9 @@ ShoyuRamen "1" --> "0..n" Topping
 
 @enduml
 
-``` ラーメンが増えた場合のクラス図 (Cookで作り分ける場合)
+``` ラーメンが増えた場合のクラス図 (Cookで作り分ける場合) ```
+
+``` uml
 @startuml
 
 class Chef {
@@ -63,7 +67,9 @@ Ramen "1" --> "0..n" Topping
 @enduml
 ```
 
-``` ラーメンが増えた場合のクラス図 (種類を増やした場合)
+``` ラーメンが増えた場合のクラス図 (種類を増やした場合) ```
+
+``` uml
 @startuml
 
 class Chef {
