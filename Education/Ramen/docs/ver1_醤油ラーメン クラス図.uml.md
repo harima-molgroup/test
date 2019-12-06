@@ -47,7 +47,8 @@ Topping --() IFood
 @enduml
 ```
 
-``` こんなこともできる!!!
+``` uml
+こんなこともできる!!!
 @startuml
 
 class Chef {
@@ -98,7 +99,8 @@ Topping --() IFood
 @enduml
 ```
 
-``` さらに...
+``` uml
+さらに...
 @startuml
 
 class Chef {
