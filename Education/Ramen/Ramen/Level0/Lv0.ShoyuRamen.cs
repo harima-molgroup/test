@@ -1,13 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace Ramen.Ver0
+namespace Ramen.Level0
 {
+    /// レベル0: 最初のラーメン作りプログラムのエントリーポイント
+    /// </summary>
+    public class EntryPoint
+    {
+        public void Run()
+        {
+            Debug.WriteLine($"****** Run: {GetType().FullName} ******");
+            Debug.WriteLine("");
+
+            
+            var me = new Chef();
+            var ramen = me.Cook();
+        }
+    }
+
     public class Chef
     {
         public ShoyuRamen Cook()
         {
-            Console.WriteLine($"さあ、醤油ラーメンを作ろう!");
+            Debug.WriteLine($"さあ、醤油ラーメンを作ろう!");
 
             var noodle = new Noodle("細麺", 300, 1);
             var soup = new Soup("醤油スープ", 100);
@@ -21,7 +36,7 @@ namespace Ramen.Ver0
 
             var ramen = new ShoyuRamen(noodle, soup, toppings);
 
-            Console.WriteLine($"醤油ラーメンができた。{ramen.GetCalory()}キロカロリー也。");
+            Debug.WriteLine($"醤油ラーメンができた。{ramen.GetCalory()}キロカロリー也。");
             return ramen;
         }
     }
