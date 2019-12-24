@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{34903728-D67A-4D0A-B5ED-583C1F35C3F6}</ProjectGuid>
+    <ProjectGuid>{006BBCA3-148E-4503-B414-5DAC77D3D5A1}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>FizzBuzzUser</RootNamespace>
-    <AssemblyName>FizzBuzzUser</AssemblyName>
+    <RootNamespace>IntroductionToCSharp.Day2.FizzBuzz</RootNamespace>
+    <AssemblyName>IntroductionToCSharp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FizzBuzz.cs" />
+    <Compile Include="Practice.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

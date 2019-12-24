@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FizzBuzzUser
+namespace IntroductionToCSharp.Day2.FizzBuzzUser
 {
     public class Program
     {

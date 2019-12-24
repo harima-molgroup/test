@@ -1,7 +1,7 @@
 ﻿using System;
 // using System.Collections.Generic;
 
-namespace IntroductionToCSharp
+namespace IntroductionToCSharp.Day1.FizzBuzz
 {
     public class Program
     {
