@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace IntroductionToCSharp.Day2.FizzBuzz
 {
     /// <summary>
-    /// C#.NET + VisualStudio の練習のためのクラス
+    /// C#.NET + VisualStudio の練習のためのクラス (Day1で完成)
     /// </summary>
     public class Practice
     {

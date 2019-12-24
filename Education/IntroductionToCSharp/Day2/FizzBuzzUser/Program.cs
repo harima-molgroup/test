@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IntroductionToCSharp.Day2.FizzBuzzUser
+﻿namespace IntroductionToCSharp.Day2.FizzBuzzUser
 {
+    /// <summary>
+    /// プロジェクト参照の説明のためのクラス
+    /// </summary>
     public class Program
     {
         public static void Main(string[] args)
         {
-            throw new Exception("私も4と7でFizzBuzzしたい!!");
+            var fizzbuzz = new FizzBuzz.FizzBuzz(4,7);
+            fizzbuzz.Execute();
         }
     }
 }
