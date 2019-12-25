@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{34903728-D67A-4D0A-B5ED-583C1F35C3F6}</ProjectGuid>
+    <ProjectGuid>{30015978-AC58-45A8-90E3-23DF19430AE8}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>IntroductionToCSharp.Day2.FizzBuzzUser</RootNamespace>
     <AssemblyName>FizzBuzzUser</AssemblyName>
@@ -43,19 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="aaa\bbb\Class1.cs" />
-    <Compile Include="aaa\Class1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FizzBuzz\FizzBuzz.csproj">
-      <Project>{006bbca3-148e-4503-b414-5dac77d3d5a1}</Project>
-      <Name>FizzBuzz</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{006BBCA3-148E-4503-B414-5DAC77D3D5A1}</ProjectGuid>
+    <ProjectGuid>{94FDA814-2E0B-4600-9831-2EB890B01964}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>IntroductionToCSharp.Day2.FizzBuzz</RootNamespace>
     <AssemblyName>IntroductionToCSharp</AssemblyName>

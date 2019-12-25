@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace IntroductionToCSharp.Day2.FizzBuzz
+namespace CSBasic.Day2.Main
 {
     /// <summary>
-    /// C#.NET + VisualStudio の練習のためのクラス (Day1で完成)
+    /// C#.NET + VisualStudio の練習のためのクラス
     /// </summary>
     public class Practice
     {

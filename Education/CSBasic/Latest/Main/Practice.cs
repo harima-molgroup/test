@@ -1,28 +1,10 @@
-﻿using System;
-// using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace IntroductionToCSharp.Day1.FizzBuzz
+namespace CSBasic.Latest.Main
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            // 練習
-            var practice = new Practice();
-            practice.Execute();
-
-            // TODO: FizzBuzz.cs
-            // 【FizzBuzzとは】
-            // 1から100までのそれぞれの数字について、
-            //   - 3の倍数なら "fizz"
-            //   - 5の倍数なら "buzz"
-            //   - 3の倍数かつ5の倍数なら "fizzbuzz"
-            // を表示する。
-        }
-    }
-
     /// <summary>
-    /// C#.NET + VisualStudio の練習のためのクラス
+    /// C#.NET + VisualStudio の練習のためのクラス (Day1で完成)
     /// </summary>
     public class Practice
     {
@@ -39,11 +21,24 @@ namespace IntroductionToCSharp.Day1.FizzBuzz
 
             // 2. ループでまとめてSayHighOrLow
             // --> Listとforeachを利用して上と同じ引数での呼び出しを一括処理
+            var prices = new List<int> { 9999, 0 };
+            prices.Add(100);
+            prices.Add(1500);
+            prices.Add(999);
+            prices.Add(1000);
+
+            foreach (int price in prices)
+            {
+                SayHighOrLow(price);
+            }
 
             // 3. 動物の好き嫌い (if文 + foreach文)
             // メソッドを呼ぶ
             // - 引数: "イヌ", "ネコ", "ゾウ", "ライオン", "ハリネズミ", "キリン", "キツネ", "カブトムシ"
+            var animals = new List<string> { "イヌ", "ネコ", "ゾウ", "ライオン", "ハリネズミ", "キリン", "キツネ", "カブトムシ" };
+            NewMethod(animals);
         }
+
 
         /// <summary>
         /// 値段が高いか安いかを主張します。
@@ -52,7 +47,13 @@ namespace IntroductionToCSharp.Day1.FizzBuzz
         /// <remarks>～999円: 安い! / 1000円～: 高い!</remarks>
         private void SayHighOrLow(int price)
         {
-            throw new NotImplementedException();
+            if (price <= 999)
+            {
+                System.Diagnostics.Debug.WriteLine("安い!");
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine("高い!");
         }
 
         /// <summary>
@@ -67,6 +68,28 @@ namespace IntroductionToCSharp.Day1.FizzBuzz
         /// </summary>
         /// <param name="animals">動物リスト</param>
         /// <returns>戻り値なし</returns>
-        // TODO: 動物の好き嫌い判定メソッドを実装
+        private void NewMethod(List<string> animals)
+        {
+            foreach (string animal in animals)
+            {
+                if (animal == "ゾウ")
+                {
+                    Debug.WriteLine($"{animal}、大好き!!");
+                    continue;
+                }
+                if (animal == "キリン")
+                {
+                    Debug.WriteLine($"{animal}、好き!!");
+                    continue;
+                }
+                if (animal == "カブトムシ")
+                {
+                    Debug.WriteLine($"{animal}、動物ちゃうで!!");
+                    continue;
+                }
+
+                Debug.WriteLine($"{animal}、フツー!!");
+            }
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace IntroductionToCSharp.Day2.FizzBuzzUser
+﻿using CSBasic.Latest.Main;
+
+namespace CSBasic.Latest.FizzBuzzUser
 {
     /// <summary>
     /// プロジェクト参照の説明のためのクラス
@@ -7,7 +9,7 @@
     {
         public static void Main(string[] args)
         {
-            var fizzbuzz = new FizzBuzz.FizzBuzz(4,7);
+            var fizzbuzz = new FizzBuzz(4, 7);
             fizzbuzz.Execute();
         }
     }

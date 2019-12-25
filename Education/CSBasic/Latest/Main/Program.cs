@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace IntroductionToCSharp.Day2.FizzBuzz
+﻿namespace CSBasic.Latest.Main
 {
     /// <summary>
     /// Day2のエントリーポイントとなるクラス

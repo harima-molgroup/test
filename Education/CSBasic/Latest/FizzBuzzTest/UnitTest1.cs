@@ -1,8 +1,9 @@
 ﻿using System;
-using IntroductionToCSharp.Day2.FizzBuzz;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FizzBuzzTest
+using CSBasic.Latest.Main;
+
+namespace CSBasic.Latest.FizzBuzzTest
 {
     [TestClass]
     public class UnitTest1

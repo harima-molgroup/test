@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace IntroductionToCSharp.Day2.FizzBuzz
+namespace CSBasic.Latest.Main
 {
     /// <summary>
     /// FizzBuzzを実行するクラス
