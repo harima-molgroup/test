@@ -3,10 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using CSBasic.Latest.Main;
 
-namespace CSBasic.Latest.FizzBuzzTest
+namespace CSBasic.Latest.Testing
 {
     [TestClass]
-    public class UnitTest1
+    public class FizzBuzzTest
     {
         [TestMethod]
         public void TestMethod1()

@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Latest", "Latest", "{15CD49
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Main", "Latest\Main\Main.csproj", "{006BBCA3-148E-4503-B414-5DAC77D3D5A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FizzBuzzTest", "Latest\FizzBuzzTest\FizzBuzzTest.csproj", "{6D263C9A-E99B-415E-9192-298EC937583E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Latest\Testing\Testing.csproj", "{6D263C9A-E99B-415E-9192-298EC937583E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Day2", "Day2", "{2905467B-4CFE-48A5-B700-2EE6D287DB7E}"
 EndProject
