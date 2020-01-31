@@ -730,9 +730,7 @@
 
 ## 宣言
 - [推奨]  
-  1つのファイルに1つのクラスのみを宣言
-  - 原則としてはこの形式をとること。  
-
+  原則として1つのファイルには1つのクラスのみを宣言すること。  
   :grin:
   ``` csharp
   // file_standard.cs
@@ -742,10 +740,10 @@
   }
   ```
 - [禁止]  
-  1つのファイルに複数のクラスを宣言 (並列)  
+  1つのファイルに含まれる名前空間の直下に複数のクラスを宣言してはならない。  
     :confounded:
     ``` csharp
-    // file_multi1.cs
+    // file_multi_class_in_a_namespace.cs
 
     namespace NameSpace {
       public class ClassA { ... }
@@ -754,7 +752,7 @@
     ```
     :confounded:
     ``` csharp
-    // file_multi2.cs
+    // file_multi_namespace_and_class.cs
 
     namespace NameSpaceA {
       public class ClassA { ... }
@@ -764,17 +762,22 @@
     }
     ```
 - [非推奨]  
-  1つのファイルに複数のクラスを宣言 (入れ子)
-  - クラスの中にクラスを入れ子で定義することがC#では文法上可能である。  
-    特定のクラスでのみ利用されるコンパクトなクラスなどで便利なこともあるため禁止はしないが、  
-    次のようにデメリットが多く、推奨はしない。
+  クラスを入れ子で宣言することは通常、望ましくない。
+  - C#の文法上、クラスの中にクラスを入れ子で定義することに制限はない  
+    (無限に入れ子にすることはもちろん不可能)。  
+    クラスを入れ子にすると基本的にはデメリットが生じるため、推奨はしない。
     - 入れ子にされるクラスをpublicとした場合、OuterClass.InnerClass のように  
       外側のクラスを経由してアクセスしなければならず、コードが長くなる。
     - 入れ子にされるクラスをprivateとするとテストから通常の方法でアクセスできない。
+  - つまり、内側のクラスが
+    1. 外側のクラスからのみ利用されるprivateクラスで
+    1. 外側のクラスのpublicメソッドを通して完全にテスト可能である  
+
+    場合に、入れ子でのクラス定義を検討すべきである。
 
   :disappointed_relieved:
   ``` csharp
-  // file_nested.cs
+  // file_nested_class.cs
 
   namespace NameSpace {
     public class OuterClass {
@@ -854,6 +857,70 @@
   ```
 
 :warning:
+## static
+- [非推奨]  
+  クラスのメンバをむやみに静的メンバとすることは避けるべきである。
+  - 静的メンバはインスタンス生成(コンストラクタ呼び出し) の手間を省くためのものではなく、  
+    メンバがインスタンスとは無関係にプログラム上、ただ一つ存在することを保証する機能である。
+    - 静的なメンバからインスタンスメンバにアクセスできないことは当然である。
+    - オブジェクト指向プログラミングは、変数や仮引数に格納されたインスタンスが  
+      その実際の型に応じて動的にふるまいを変えるポリモーフィズムを最大限に活用する。  
+      従って、必然的にインスタンスメンバを中心に処理を行うことになるため、  
+      盲目的に静的メンバを定義してしまうとプログラミング自体が非常に困難になってしまう。
+- [必須]  
+  クラスのメンバがすべて静的である場合、クラスも静的なクラスとすること。
+
+## インターフェースの実装
+- [任意]  
+  クラスは複数のインターフェースを実装してもよい。
+  - ダイヤモンド継承に注意すること。
+
+## 抽象クラス
+- [禁止]  
+  :red_circle::red_circle: 物議をかもしそう。大丈夫か?? :red_circle::red_circle:  
+  インターフェースを実装しない抽象クラスを定義してはならない。
+
+## 派生クラス
+- [非推奨]  
+  新しいクラスで実装済みの機能を再利用する場合、既存のクラスを継承させた派生クラスを  
+  作ることは望ましくない。
+  - 既存クラスのインターフェースを抽出し、委譲できないか検討する。  
+
+  :worried:
+  ``` csharp
+  using System.Text;
+
+  // 「ファイルを読むためのクラス」に継承させることでしか再利用できない。
+  public class FileReader {
+    protected string ReadFile(string path, Encoding enc) { ... }
+  }
+  public class Utf8FileReader: FileReader {
+    public string ReadFile(string path) {
+      return ReadFile(path, Encoding.Utf8)
+    }
+  }
+  ```
+  :grin:
+  ``` csharp
+  using System.Text;
+
+  // 「ファイルを読む機能をもつクラス」でさえあれば再利用できる。
+  public interface IFileReader {
+    string ReadFile(string path);
+  }
+  internal class FileReader {
+    public string ReadFile(string path, Encoding enc) { ... }
+  }
+  public class Utf8FileReader: IFileReader {
+    private readonly FileReader _reader = new FileReader();
+
+    public string ReadFile(string path) {
+      return _reader.ReadFile(path, Encoding.Utf8)
+    }
+  }
+  ```
+
+:warning:
 ## ヘルパクラス
 :red_circle: ルールとしての一貫性大丈夫??
 - [禁止]  
@@ -864,14 +931,30 @@
 - [推奨]  :red_circle: Webアプリに移動  
   ビューの実装においては生産性向上のため、再利用可能な部品をHTMLヘルパとして共通化することが  
   望ましい。
+  
+:warning:
+## フィールド
+- [禁止]  
+  publicおよびinternalのインスタンスフィールドを定義してはならない。
+  - 外部への公開はプロパティを通して行うこと。
+- [非推奨]  
+  自動実装プロパティの利用により、インスタンスフィールドの定義を最小限に抑えること。  
+  :worried:
+  ``` csharp
+  private int _name;
+  public int Name {
+    get { return _name; }
+  }
+  ```
+  :grin:
+  ``` csharp
+  public int Name { get; private set;}  
+  ```
+- [推奨]  
+:red_circle: const vs static readonly
 
 :warning:
-## static
-
-:red_circle: 引数のデフォルト値設定よりオーバーロード優先
-
-:warning:
-## const / readonly
+## プロパティ
 
 :warning:
 ## コンストラクタ
@@ -886,18 +969,14 @@
 :warning:
 ## メソッド
 
-:warning:
-## プロパティ
 
+:red_circle: 引数のデフォルト値設定よりオーバーロード優先
 :warning:
 ## メソッドのパラメータ
 - [禁止]  
   メソッドおよびコンストラクタにおいて ref、out 以外のパラメータに値を再設定してはならない。
   - 可読性を損ない、バグ混入のリスクを高める。
   - 前後の値を別々に保持しておくことでデバッグ時に値の変化の確認が可能となる。
-  
-:warning:
-## フィールド
 
 :warning:
 # 構造体
