@@ -3,20 +3,24 @@
 :red_circle: 表記ゆれ
 - クラスとか型をサフィックスにつけるか
 - 半角文字(かっこ、アルファベット、数値)の両端の半角スペース
-- 句読点
-
-:red_circle: usingブロック
+- 句読点  
+:red_circle: 開発スタート時に相談して方針を決めるべきことを洗い出す。 --> 凡例決めてシンボル表示  
+:red_circle: DB操作周りの話?  
 
 # ルールについて
 --- 
 
 ## 読み方
 - 以下に定めるルールに対し、[用語集に記載されているルールの区分](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/45/%E7%94%A8%E8%AA%9E%E9%9B%86?anchor=%E3%83%AB%E3%83%BC%E3%83%AB%E3%81%AE%E5%8C%BA%E5%88%86)を適用する。
-- 同じ項目に対するルールが2箇所以上に書かれている場合には、  
-  最後に書かれているものを適用するものとする。
+- 同じ項目に対し適用されるルールが2箇所以上に書かれている場合には、後ろに書かれているルールで  
+  順次上書きされていくものとする。
+- ルール全体として、開発者が次のようなコードを書けるようになること目標としている :
+  1. 短く簡潔なコード
+  1. テストしやすいコード
+  1. バグが混入しにくいコード
 
 ## 編集の仕方
-- ルールは後勝ちで上書きされるため、全般的な内容 ～ 個別の内容 の順にルールを記述すること。
+- ルールは後勝ちで上書き解釈されるため、共通事項 ～ 個別の詳細 の順にルールを記述すること。
 
 :warning:
 # 組み込み型
@@ -216,6 +220,85 @@
   ```
 
 :warning:
+# リテラル
+## 組み込み型
+- [禁止]  
+  原則としてマジックナンバー、マジックストリングの使用は禁止する。
+  - 静的なフィールド(const, static readonly)やローカル定数に値を格納し、適切な名前をつけること。
+    - コメントに説明を書くことができる。
+    - 仕様変更によりDBで値を管理するようになった場合など、対応もれを予防することができる。
+  - ループ開始インデックスの 0 など自明な場合は問題ない。
+  - 値の管理方法やデフォルト値をどうするかといった個々のケースについてはレビュアーと相談すること。
+
+## オブジェクト
+- [任意]  
+  コレクションの初期化にリテラルを使用してよい。  
+  :grin:
+  ``` csharp
+  using System.Collections.Generic;
+
+  var list = new List<string>();
+  list.Add("one");
+  list.Add("two");
+  ...
+  ```
+  :grin:
+  ``` csharp
+  using System.Collections.Generic;
+
+  var list = new List<string> { "one", "two", ... };
+  ```
+  :grin:
+  ``` csharp
+  using System.Collections.Generic;
+
+  var dic = new Dictionary<int, string>();
+  dic.Add(1, "one");
+  dic.Add(2, "two");
+  ...
+  ```
+  :grin:
+  ``` csharp
+  using System.Collections.Generic;
+
+  var dic = new Dictionary<int, string> { { 1, "one" }, { 2, "two" }, ... };
+  ```
+
+## ラムダ式 (関数リテラル)
+- [任意]  
+  ラムダ式を使用してよい。  
+  主な用途 :
+  1. DBエンティティの操作
+  1. コレクションの処理
+  1. Action型、Func型の変数への処理の代入
+- [推奨]  
+  パフォーマンス上の問題がなければ、コレクションの処理にはLinqを使用するのが望ましい。  
+  - 慣れは必要だが、圧倒的に簡潔に書ける。  
+
+  :worried:
+  ``` csharp
+  using System.Collections.Generic;
+  using System.Linq;
+
+  var namedUsers = new List<User>();
+  foreach(var user in users){
+    if(string.IsNullOrEmpty(user.Name)){
+      continue;
+    }
+    namedUsers.Add(user);
+  }
+  ```
+  :grin:
+  ``` csharp
+  using System.Collections.Generic;
+  using System.Linq;
+
+  var namedUsers = users
+    .Where(x => string.IsNullOrEmpty(x.Name))
+    .ToList();
+  ```
+
+:warning:
 # 変数
 ---
 
@@ -248,7 +331,9 @@
   intValue += shiftValue;
   ```
 - [必須]  
-  整数型の変数の値を1だけ増減する場合には**後置**インクリメント/デクリメント演算子(++, --) を用いること。  
+  整数型の変数の値を1だけ増減する場合には**後置**インクリメント/デクリメント演算子(x++, x--) を用いること。 
+  - 前置インクリメント/デクリメント演算子(++x, --x) の使用は禁止する。
+
   :confounded:
   ``` csharp
   count = count + 1;
@@ -257,26 +342,28 @@
   ``` csharp
   count += 1;
   ```
+  :confounded:
+  ``` csharp
+  ++count;    // 前置は禁止
+  ```
   :grin:
   ``` csharp
   count++;
   ```
 - [禁止]  
-  前置インクリメント/デクリメント演算子(++, --) の仕様は禁止する。
-  - ややこしいわりにあまり使う機会がないため、バグのリスクを高めるだけである。  
+  メソッド呼び出しの整数型引数に対してインクリメントを行ってはならない。
+  - 可読性を低下させ、バグのリスクを高めるだけである。  
 
   :confounded:
   ``` csharp
-  ++count;
-  ```
-  :confounded:
-  ``` csharp
-  someObject.Method(++count);
+  int count = 0;
+  someObject.Method(count++); // someObject.Method(0 or 1)?
   ```
   :grin:
   ``` csharp
+  int count = 0;
+  someObject.Method(count);   // 上の例と同じ処理。明らかに someObject.Method(0)
   count++;
-  someObject.Method(count);
   ```
 - [任意]  
   bool型への値の再設定において復号代入演算子( &=, |=, ... ) を利用するかどうかは開発者の裁量に任せる。
@@ -459,6 +546,8 @@
   ```  
 - [必須]  
   例外の発生が想定される個所ではtry-catch節により例外を捕捉すること。
+- [任意]  
+  finally句は必要なければ省略してよい。
 - [任意]  
   想定される例外の種類が複数ある場合に、共通の処理でよい例外については同じcatch節で捕捉してよい。
 - [禁止]  
@@ -884,7 +973,7 @@
 - [非推奨]  
   新しいクラスで実装済みの機能を再利用する場合、既存のクラスを継承させた派生クラスを  
   作ることは望ましくない。
-  - 既存クラスのインターフェースを抽出し、委譲できないか検討する。  
+  - 既存クラスから再利用したい機能のインターフェースを抽出し、委譲できないか検討する。  
 
   :worried:
   ``` csharp
@@ -931,33 +1020,272 @@
 - [推奨]  :red_circle: Webアプリに移動  
   ビューの実装においては生産性向上のため、再利用可能な部品をHTMLヘルパとして共通化することが  
   望ましい。
-  
+
+# :red_circle:フィールド/プロパティ値をどこで初期化するか?
+1. 散らばらない --> staticは宣言時、他はコンストラクタ??
+1. 初期化忘れを防ぎたい  
+   - 宣言時でもコンストラクタでも忘れる時は忘れる。
+   - 巨大クラス --> 宣言時の方がレビューが楽そう(巨大クラスは出現するか?? )
+   - テストがあれば平気?
+
+**[案]**
+---
+| access    | -   | readonly |  static  | static readonly<br/>const |
+|:----------|:---:|:--------:|:--------:|:---------------:|
+| private   | ctor|   ctor   | declare? |     declare     |
+| protected | ctor|   ctor   | declare? |     declare     |
+| internal  |  x  |    x     | declare? |     declare     |
+| public    |  x  |    x     | declare? |     declare     |
+
 :warning:
 ## フィールド
 - [禁止]  
   publicおよびinternalのインスタンスフィールドを定義してはならない。
   - 外部への公開はプロパティを通して行うこと。
-- [非推奨]  
-  自動実装プロパティの利用により、インスタンスフィールドの定義を最小限に抑えること。  
+- [推奨]  
+  public、protectedおよびinternalの読取専用な静的フィールドは定数(const) ではなく、読取専用変数  
+  (static readonly) として定義することが望ましい。
+  - 定数はコンパイル時にバイナリに値が埋め込まれてしまうため、外部アセンブリから  
+    参照される場合にバージョニング問題が発生するリスクがある。  
+    参照 :arrow_right: [C# の const の間違った使い方をやめよう](https://qiita.com/Nossa/items/b874fa6c115898e2a9c8)
+  - privateフィールドは定数としても問題ない。
+  - publicでなくとも、internalではInternalsVisibleTo利用時、protectedでは外部アセンブリで  
+    派生クラスを定義した際に上記の問題が起こりうる。
+  - 消費税率などは将来変更される可能性があるため、定数を用いるすべきではない。  
+    一方、一日が24時間であることや円周率など自然科学定数は将来にわたって不変であるから、  
+    定数で問題ない。
+- インスタンスフィールドの
+- [推奨]  
+  自動実装プロパティを利用することでインスタンスフィールドの定義を省略できる個所では、  
+  自動実装プロパティを利用すること。
+  - 下の例でいえば、自動プロパティを利用すれば値の取得も設定も常にNameプロパティを  
+    通して行う形で統一できる。
+
   :worried:
   ``` csharp
-  private int _name;
-  public int Name {
+  private string _name;
+  public string Name {
     get { return _name; }
   }
   ```
   :grin:
   ``` csharp
-  public int Name { get; private set;}  
+  public string Name { get; private set;}  
   ```
-- [推奨]  
-:red_circle: const vs static readonly
 
 :warning:
 ## プロパティ
+- [推奨]  
+  可読性を損なわない範囲において、より短く書ける記法を積極的に用いるべきである。    
+  :worried:
+  ``` csharp
+  private string _name;
+  public string Name {
+    get { return _name; }
+  }
+  ```
+  :grin:
+  ``` csharp
+  public string Name { get; private set;}  // 外部からは読取専用
+  ```
+  :worried:
+  ``` csharp
+  private readonly string _name;
+  public string Name {
+    get { return _name; }
+  }
+  // コンストラクタで _name を初期化
+  ```
+  :grin:
+  ``` csharp
+  public string Name { get; }  // 内外とも読取専用
+  // コンストラクタで Name を初期化
+  ```
+  :worried:
+  ``` csharp
+  public string Name {
+    get { return GetFullName(_familyName, _firstName); }
+  }  
+  ```
+  :grin:
+  ``` csharp
+  public string Name => GetFullName(_familyName, _firstName);  // 取得する値を動的に生成
+  ```
+- [禁止]  
+  派生クラスでオーバーライドされないプロパティを仮想プロパティとして定義してはならない。  
+  :confounded:
+  ``` csharp
+  public class Person {
+    public virtual int Age { get; }  // とりあえず仮想プロパティとした
+  }
+  // Personクラスを継承するクラスは存在しない。
+  ```
+  :grin:
+  ``` csharp
+  public class Person {
+    public virtual int Age { get; }
+  }
+  public class WildPerson: Person {
+    private int _age;
+    public override int Age => (_age / 10) * 10;  // 何十代かだけ答える(1の位を切り捨て)
+  }
+  ```
+
+:warning:
+## メソッド
+- [非推奨]  
+  クラス内にprivateメソッドが増えすぎるのは望ましくない。
+  - 単一責務の原則に従い、クラスを分割できないかを検討する。 
+- [禁止]  
+  ライブラリに定義されているクラスに対して拡張メソッドを定義してはならない。
+  - 拡張メソッドと同名のメソッドがライブラリ側で新たに定義される可能性があり、その場合の  
+    動作を保証できない。
+  - 拡張メソッドはクラス定義本体とは別に定義されるため、定義場所がわかりにくいことがある。
+- [禁止]  
+  派生クラスでオーバーライドされないメソッドを仮想メソッドとして定義してはならない。  
+  :confounded:
+  ``` csharp
+  using System;
+  public class Person {
+    public virtual void SayGoodMorning(){   // とりあえず仮想メソッドとした
+      Console.WriteLine("おはようございます。");
+    }
+  }
+  // Personクラスを継承するクラスは存在しない。
+  ```
+  :grin:
+  ``` csharp
+  using System;
+  public class Person {
+    public virtual void SayGoodMorning(){
+      Console.WriteLine("おはようございます。");
+    }
+  }
+  public class Yankee: Person {
+    public override void SayGoodMorning(){
+      Console.WriteLine("おはざ～す!");
+    }
+  }
+  ```
+- [禁止]  
+  メソッドおよびコンストラクタにおいて ref、out 以外のパラメータに値を再設定してはならない。
+  - 可読性を損ない、バグ混入のリスクを高める。
+  - 前後の値を別々に保持しておくことでデバッグ時に値の変化の確認が可能となる。
+  - 複数の値を返したい場合は、クラスやタプルなどを戻り値にすればよい。  
+
+  :confounded:
+  ``` csharp
+  public string Minify(string sql) {
+    sql = sql.Trim();
+    sql = sql.Replace("\r\n", " ");
+    sql = sql.Replace("  ", " ");
+    return sql;
+  }
+  ```
+  :grin:
+  ``` csharp
+  public bool TryGetValue(int id, ref string value) {
+    if (!IsValid(id)) {
+      return false;
+    }
+
+    value = GetValue(id);
+    return true;
+  }
+  ```
+- [任意]  
+  オーバーロードを使用してよい。
+- [非推奨]  
+  [可変長引数 (params) ](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/params)の使用は避けること。
+  - Listや配列を渡せばよい。
+  - 引数の数が場合により異なるため、どのオーバーロードであるかが判断しにくい。
+- [任意]  
+  [省略可能な引数](https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/classes-and-structs/named-and-optional-arguments)を使用してよい。
+- [任意]  
+  [名前付き引数](https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/classes-and-structs/named-and-optional-arguments)を使用してメソッドを呼び出してよい。
+- [推奨]  
+  通常は省略可能な引数よりもオーバーロードを使用すること。
+  - 省略可能な引数の規定値にもバージョニング問題が存在する。
+  - オーバーロードを用いた方がインテリセンスが読みやすい。
+  - 変更に強そう:red_circle: 本当?  
+  - 複数の省略可能な引数を定義していて、明示するもの、省略するものの組み合わせが  
+    非常に多い場合、すべてのケースに対してオーバーロードを書くのは望ましくない。  
+    省略可能な引数を使用してメソッドを定義し、利用側で名前付き引数を使って呼び出すこと。  
+    :red_circle: 引数をクラスでまとめる件を踏まえると、省略可能な引数は禁止?
+
+  :worried:
+  ``` csharp
+  public string GetMessage(int id, Language language = Language.Japanese) {
+
+  }
+  ```
+  :grin:
+  ``` csharp
+  public string GetMessage(int id) {
+    return GetMessage(id, Language.Japanese);
+  }
+  public string GetMessage(int id, Language language) {
+
+  }  
+  ```
+  :japanese_ogre:
+  ``` csharp
+  using System.Collections.Generic;
+  
+  public class Grep{
+    public List<string> Execute(string path, string keyword) {
+      return Execute(path, keyword, Encoding.UTF8, true, false, false, false);
+    }
+    public List<string> Execute(string path, string keyword,
+      Encoding enc, bool isCaseSensitive, bool useRegEx) {
+      return Execute(path, keyword, enc, true, isCaseSensitive, useRegEx, false);
+    }
+
+    // ... その他、引数の主な組み合わせを網羅
+
+    public List<string> Execute(string path, string keyword, Encoding enc,
+      bool isRecursive, bool isCaseSensitive, bool useRegEx, bool showOnlyFileNames) {
+      ...
+    }
+  }
+  ```
+  :grin:
+  ``` csharp
+  using System.Collections.Generic;
+  using System.Text;
+  
+  public class Grep{
+    public List<string> Execute(string path, string keyword, Encoding enc,
+      bool isRecursive = true,
+      bool isCaseSensitive = false,
+      bool useRegEx = false,
+      bool showOnlyFileNames = false) {
+      ...
+    }
+  }
+
+  public class TextService {
+    public string GrepCaseSensitive(string path, string keyword){
+      return new Grep.Execute(path, keyword, Encoding.UTF8, isCaseSensitive: true);
+    }
+    public string GrepRegEx(string path, string keyword){
+      return new Grep.Execute(path, keyword, Encoding.UTF8, isCaseSensitive: true, useRegEx: true);
+    }
+  }
+  ```
+- [非推奨]  
+  引数は増えすぎないようにすべきである。
+  - 引数の組み合わせによって処理が分岐するような場合、テストが難しくなる。
+  - 引数をグループに分け、それぞれクラスとしてまとめられないかを検討する。 
+- [任意]  :red_circle: 要検討  
+  メソッドでコールバック関数を受け取ってもよい。ただし、
+  - 可読性があまり高くない。
+  - インターフェースで代用可能である。
+  ことから、開発の初めにチーム内で相談して使用方針を決めるのが望ましい。
 
 :warning:
 ## コンストラクタ
+### ※ コンストラクタは本質的にはメソッドであるため、以下に特記する内容を除き、メソッドの項に準ずる。
 - [必須] :red_circle: 要検討  
   一部の例外的なクラスを除き、必ずデフォルトコンストラクタを実装すること。
   - 理由???
@@ -965,18 +1293,19 @@
     1. テストクラス
     1. コントローラ
     1. ...
-
-:warning:
-## メソッド
-
-
-:red_circle: 引数のデフォルト値設定よりオーバーロード優先
-:warning:
-## メソッドのパラメータ
-- [禁止]  
-  メソッドおよびコンストラクタにおいて ref、out 以外のパラメータに値を再設定してはならない。
-  - 可読性を損ない、バグ混入のリスクを高める。
-  - 前後の値を別々に保持しておくことでデバッグ時に値の変化の確認が可能となる。
+- [任意]  
+  クラスのインスタンス生成時にオブジェクト初期化子を使用してよい。
+  :grin:
+  ``` csharp
+  var user = new User();
+  user.Id = 111;
+  user.Password = Hash("password", "salt");
+  ...
+  ```
+  :grin:
+  ``` csharp
+  var user = new User { Id = 111, Password = Hash("password", "salt"), ... };
+  ```
 
 :warning:
 # 構造体
@@ -993,7 +1322,7 @@
     これは多くの場合にバグ混入リスクを高める。
   - ごく小規模な構造化データにおいて構造体の方がクラスよりもパフォーマンスがよくなるとの  
     ことであるが、現状ではそこまでパフォーマンスを気にする必要性が見込まれない。
-  - 参照: [ C# によるプログラミング入門 > メモリとリソース管理 > 構造体 ](https://ufcpp.net/study/csharp/resource/rm_struct/)
+  - 参照: [ 構造体の使用 (C# プログラミング ガイド) ](https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/classes-and-structs/using-structs)
 
 :warning:
 # インターフェース
@@ -1003,9 +1332,11 @@
 - [必須]  
   定義するメソッド、プロパティは最小限にとどめること。
   - 単純であるほど様々な場面で適用できる可能性を持たせることができる。
+  - 関連の薄いメソッドを複数定義するのは誤りである。それらは別々のインターフェースに  
+    分けて定義すること。
 
 ## 実装する場合
-:red_circle: ない?
+:red_circle: 特になし?
 
 ## 利用する場合
 - [必須]  
