@@ -58,6 +58,7 @@
       ``` csharp
       // ごく単純なクラスでもusingが必要となる。
       using System;
+      
       namespace DotNetTypesRequireUsing {
         public class User {
           public Int32 ID { get; set; }
@@ -177,6 +178,28 @@
   }
   ```
 
+# コレクション
+---
+
+- [推奨]  
+  配列でなければ実現できない処理を除き、コレクションは List\<T> や Dictionary\<TKey, TValue> を  
+  用いるのが望ましい。
+
+  | 比較項目 | 配列 | List / Dictionary | 備考 |
+  |:--|:--:|:--:|:---|
+  | サイズ変更<br />(要素追加・削除) | 不可<br />(手動) | 可<br />(自動) | 配列は初期化時にサイズが決まらない場合に<br />自分で制御する必要がある |
+  | 初期化 | new int[10] ;<br />など | new List<int>( ) ;<br />など | 配列 : 専用の構文<br />ListやDictionary : 通常のクラスと同じ |
+  | foreachループ | 可 | 可 | どちらも IEnumerable インターフェース |
+  | forループ | 可 | 可 | どちらも collection[ i ] の形で要素に<br />アクセスできる |
+  | 文字列 :arrow_right: コレクション<br />(分割) | 可 | 不可 | ToList メソッドでListに変換可能<br />※ using System.Linq が必要 |
+  | コレクション :arrow_right: 文字列<br />(結合) | 可 | 可 | どちらも string.Join メソッドで結合できる |
+  | 可変長引数の型 | 可 | 不可 | メソッドの可変長引数は配列でのみ定義可能 |
+- [任意]  
+  コレクションの一括処理にLinqを使用してよい。  
+  - 多くの場合、for文やforeach文よりも大幅にシンプルに書ける。
+    - ループ構文とLinqの優先順位は[ループ制御の項](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/37/%E5%9F%BA%E6%9C%AC%E3%83%AB%E3%83%BC%E3%83%AB?anchor=%E3%83%AB%E3%83%BC%E3%83%97)を参照。
+  - パフォーマンスを考慮する必要のある場面は少ない。
+
 # Null許容型
 ---
 
@@ -223,16 +246,30 @@
 # リテラル
 ## 組み込み型
 - [禁止]  
-  原則としてマジックナンバー、マジックストリングの使用は禁止する。
+  原則としてマジックナンバー、マジックストリングを使用してはならない。
   - 静的なフィールド(const, static readonly)やローカル定数に値を格納し、適切な名前をつけること。
     - コメントに説明を書くことができる。
     - 仕様変更によりDBで値を管理するようになった場合など、対応もれを予防することができる。
   - ループ開始インデックスの 0 など自明な場合は問題ない。
   - 値の管理方法やデフォルト値をどうするかといった個々のケースについてはレビュアーと相談すること。
+- [推奨]  
+  文字列のリテラルへの値の埋め込みには、[文字列挿入](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/tokens/interpolated) を使用すること。
+
+  :worried:
+  ``` csharp
+  viewModel.Message = string.Format(
+    "エラー[{0:000}]: {1}の在庫がありません。", Error.NoItem, items[i].Name);
+  ```
+  :grin:
+  ``` csharp
+  viewModel.Message = 
+    $"エラー[{Error.NoItem:000}]: {items[i].Name}の在庫がありません。";
+  ```
 
 ## オブジェクト
 - [任意]  
-  コレクションの初期化にリテラルを使用してよい。  
+  コレクションの初期化処理ではリテラルを使用してもよい。  
+  要素数や値などに応じて読みやすい書き方を選択する。  
   :grin:
   ``` csharp
   using System.Collections.Generic;
@@ -266,37 +303,56 @@
 
 ## ラムダ式 (関数リテラル)
 - [任意]  
-  ラムダ式を使用してよい。  
-  主な用途 :
-  1. DBエンティティの操作
-  1. コレクションの処理
-  1. Action型、Func型の変数への処理の代入
-- [推奨]  
-  パフォーマンス上の問題がなければ、コレクションの処理にはLinqを使用するのが望ましい。  
-  - 慣れは必要だが、圧倒的に簡潔に書ける。  
+  ラムダ式を自由に使用してよい。  
+  - コレクションの処理  
+    :worried:
+    ``` csharp
+    using System.Collections.Generic;
 
-  :worried:
-  ``` csharp
-  using System.Collections.Generic;
-  using System.Linq;
-
-  var namedUsers = new List<User>();
-  foreach(var user in users){
-    if(string.IsNullOrEmpty(user.Name)){
-      continue;
+    var selectedUsers = new List<User>();
+    foreach(var row in rows){
+      if(!row.IsChecked){
+        continue;
+      }
+      selectedUsers.Add(row.User);
     }
-    namedUsers.Add(user);
-  }
-  ```
-  :grin:
-  ``` csharp
-  using System.Collections.Generic;
-  using System.Linq;
+    ```
+    :grin:
+    ``` csharp
+    using System.Collections.Generic;
+    using System.Linq;
 
-  var namedUsers = users
-    .Where(x => string.IsNullOrEmpty(x.Name))
-    .ToList();
-  ```
+    var selectedUsers = rows
+      .Where(x => x.IsChecked)
+      .Select(x => x.User);
+    ```
+  - DBエンティティの操作  
+    :grin:
+    ``` csharp
+    using System.Linq;
+
+    int adminId = dbContext.M_Roll
+      .Where(x => x.Admin_Flag)
+      .Select(x => x.Id)
+      .First();
+
+    var adminUsers = dbContext.M_User
+      .Where(x => x.Roll = adminId);
+    ```
+  - Action型、Func型の変数の定義  
+    :grin:
+    ``` csharp
+    using System;
+    using System.Text;
+
+    var sb = new StringBuilder();
+    Action<User, string> appendUser = (user, roll) => {
+      sb.AppendLine($"ユーザ情報取得 (ID: {user.Id}, ユーザ名: {user.Name}, ロール: {roll})");
+    };
+
+    appendUser(user1, "administrator");
+    ...
+    ```
 
 :warning:
 # 変数
@@ -366,7 +422,7 @@
   count++;
   ```
 - [任意]  
-  bool型への値の再設定において復号代入演算子( &=, |=, ... ) を利用するかどうかは開発者の裁量に任せる。
+  bool型への値の再設定において復号代入演算子( &=, |=, ... ) を使用してよい。
 
 # 制御構文
 ---
@@ -398,13 +454,15 @@
   }
   ```
 
-- [非推奨] :red_circle: 禁止にしたいがちょっと理由が弱い...  
+- [非推奨]  
+  :red_circle: 禁止にしたいがちょっと理由が弱い...。「switchは悪い設計の香り」の説明を  
   switch文の利用を極力避けること。
   - 処理を分岐したい場合は、分岐の条件が定数値のみでシンプルに表現できる状況であるため、  
     インターフェースとポリモーフィズムで簡単に書き換えられるはずである。  
     :arrow_right: [イディオム参照](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/39/%E3%82%A4%E3%83%87%E3%82%A3%E3%82%AA%E3%83%A0)
 
-  - 変数に代入する値を切り替えたいだけの場合は、三項演算子でより簡潔に書くことができる。  
+  - 変数に代入する値を切り替えたいだけの場合は、Dictionaryや三項演算子を利用すれば  
+    簡潔に書くことができる。  
     :disappointed_relieved:
     ``` csharp
     string name;
@@ -427,6 +485,20 @@
                   (animalType == 2) ? "猫" :
                     ...
                   "新種";
+    ```
+    :grin:  
+    ``` csharp
+    using System.Collections.Generic;
+
+    const string defaultAnimal = "新種";
+    var animals = new Dictionary<int, string>{
+      { 1, "犬" }, { 2, "猫" }, ...
+    }
+    
+    if (!animals.TryGetValue(i, out string animal))
+    {
+        animal = defaultAnimal;
+    }
     ```
     :rage:  
     ``` csharp    
@@ -451,7 +523,14 @@
   積極的にガード節を利用し、不必要な分岐やネストを避けること。  
   :arrow_right: [イディオム参照](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/39/%E3%82%A4%E3%83%87%E3%82%A3%E3%82%AA%E3%83%A0)
 - [推奨]  
-  コレクションに対する繰り返し処理では、基本的にはforeach文を利用すること。
+  コレクションに対する繰り返し処理では、次の優先順位に従い処理方法を選択すること。
+  | 優先順位 | 方法 | 基本的な利用シーン |
+  |:---:|:---------|:----------------------------|
+  |  1  | Linq     | 通常はLinqを利用する(多くのケースで要素の変更にも対応可能) |
+  |  2  | foreach  | foreachの方が簡潔に書ける場合、速度が要求される場合 |
+  |  3  | for      | イレギュラーな順序で要素にアクセスする場合、速度が要求される場合 |
+  |  4  | while    | 通常、コレクションに対しては使わない |  
+
   - コレクションの要素を先頭から順に参照する以外のループ処理では、foreach文で  
     対応できない、あるいは注意を要するケースが存在する。  
     1. コレクションに対する変更を伴う場合  
@@ -857,10 +936,10 @@
     クラスを入れ子にすると基本的にはデメリットが生じるため、推奨はしない。
     - 入れ子にされるクラスをpublicとした場合、OuterClass.InnerClass のように  
       外側のクラスを経由してアクセスしなければならず、コードが長くなる。
-    - 入れ子にされるクラスをprivateとするとテストから通常の方法でアクセスできない。
+    - 入れ子にされるクラスをprivateとすると直接テストできない。
   - つまり、内側のクラスが
     1. 外側のクラスからのみ利用されるprivateクラスで
-    1. 外側のクラスのpublicメソッドを通して完全にテスト可能である  
+    1. 外側のクラスのpublicメソッドを通して完全にテストすることが容易である(ほど単純な)  
 
     場合に、入れ子でのクラス定義を検討すべきである。
 
@@ -983,6 +1062,8 @@
   public class FileReader {
     protected string ReadFile(string path, Encoding enc) { ... }
   }
+
+  // UTF8エンコーディングのファイルを読むクラス。
   public class Utf8FileReader: FileReader {
     public string ReadFile(string path) {
       return ReadFile(path, Encoding.Utf8)
@@ -997,9 +1078,13 @@
   public interface IFileReader {
     string ReadFile(string path);
   }
+
+  // IFileReaderインターフェースのいろいろな実装で再利用するためのクラス。
   internal class FileReader {
     public string ReadFile(string path, Encoding enc) { ... }
   }
+
+  // UTF8エンコーディングのファイル向けのIFileReaderの実装。
   public class Utf8FileReader: IFileReader {
     private readonly FileReader _reader = new FileReader();
 
@@ -1137,18 +1222,20 @@
   クラス内にprivateメソッドが増えすぎるのは望ましくない。
   - 単一責務の原則に従い、クラスを分割できないかを検討する。 
 - [禁止]  
-  ライブラリに定義されているクラスに対して拡張メソッドを定義してはならない。
-  - 拡張メソッドと同名のメソッドがライブラリ側で新たに定義される可能性があり、その場合の  
-    動作を保証できない。
+  使用するフレームワークおよびライブラリに定義されているクラスに対して拡張メソッドを  
+  定義してはならない。
+  - 拡張メソッドと同名のメソッドがフレームワークやライブラリ側で新たに定義される可能性がある。  
+    もしそうなった場合、動作を保証できない。
   - 拡張メソッドはクラス定義本体とは別に定義されるため、定義場所がわかりにくいことがある。
 - [禁止]  
   派生クラスでオーバーライドされないメソッドを仮想メソッドとして定義してはならない。  
   :confounded:
   ``` csharp
   using System;
+
   public class Person {
-    public virtual void SayGoodMorning(){   // とりあえず仮想メソッドとした
-      Console.WriteLine("おはようございます。");
+    public virtual void TellThanks(){   // とりあえず仮想メソッドとした
+      Console.WriteLine("ありがとうございました。");
     }
   }
   // Personクラスを継承するクラスは存在しない。
@@ -1156,17 +1243,44 @@
   :grin:
   ``` csharp
   using System;
+
   public class Person {
-    public virtual void SayGoodMorning(){
-      Console.WriteLine("おはようございます。");
+    public virtual void TellThanks(){
+      Console.WriteLine("ありがとうございました。");
     }
   }
   public class Yankee: Person {
-    public override void SayGoodMorning(){
-      Console.WriteLine("おはざ～す!");
+    public override void TellThanks(){
+      Console.WriteLine("あざ～～す!");
     }
   }
   ```
+- [推奨]  
+  戻り値の型は、実際に呼び出し元に返すインスタンスを返せる(ビルドエラーとならない) 範囲内で  
+  なるべく具体的な型にすべきである。
+  - 優先順位 :  
+    1. 具象クラス (派生クラスなし)
+    1. 具象クラス (派生クラスあり)
+    1. 抽象クラス
+    1. インターフェース
+  - メソッド呼び出し側で無駄なダウンキャストを書かなくてよい。
+  - メソッド呼び出し側でインターフェース型の変数に戻り値を格納してポリモーフィズムを  
+    利用することもできる。
+  - 戻り値の型がインターフェースとなる典型例としては、様々な型のインスタンスを生成して返す  
+    ファクトリメソッドが挙げられる。
+- [禁止]  
+  戻り値がvoid型の非同期メソッド(async void) を作ってはならない [(参照 : 非同期メソッド)](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/37/%E5%9F%BA%E6%9C%AC%E3%83%AB%E3%83%BC%E3%83%AB?anchor=%E9%9D%9E%E5%90%8C%E6%9C%9F%E5%87%A6%E7%90%86)。
+- [推奨]  
+  引数の型は、必要なインターフェースを備えている範囲内でなるべく抽象的な型にすべきである。
+  - 優先順位 :  
+    1. インターフェース
+    1. 抽象クラス
+    1. 具象クラス (派生クラスあり)
+    1. 具象クラス (派生クラスなし)
+  - メソッド内で利用したい機能にさえアクセスできればメソッドは実装できる。
+    - 通常、object型では機能が足りない。
+  - ポリモーフィズムを利用できるため、より柔軟なメソッドを実装することが可能。  
+  - この優先順位に従うことにより、ASP.NET Coreの機能を最大限に活用することができる。
 - [禁止]  
   メソッドおよびコンストラクタにおいて ref、out 以外のパラメータに値を再設定してはならない。
   - 可読性を損ない、バグ混入のリスクを高める。
@@ -1225,7 +1339,7 @@
     return GetMessage(id, Language.Japanese);
   }
   public string GetMessage(int id, Language language) {
-
+    ...
   }  
   ```
   :japanese_ogre:
@@ -1279,9 +1393,11 @@
   - 引数をグループに分け、それぞれクラスとしてまとめられないかを検討する。 
 - [任意]  :red_circle: 要検討  
   メソッドでコールバック関数を受け取ってもよい。ただし、
-  - 可読性があまり高くない。
-  - インターフェースで代用可能である。
-  ことから、開発の初めにチーム内で相談して使用方針を決めるのが望ましい。
+  - 可読性があまり高くない  
+  - オブジェクト指向よりも関数型プログラミングに寄ったやり方である
+  - インターフェース(オブジェクト指向のやり方) で代替可能である  
+
+  ため、コーディングフェーズ開始前にチーム内で相談して使用方針を決めるのが望ましい。
 
 :warning:
 ## コンストラクタ
@@ -1330,10 +1446,10 @@
 
 ## 定義する場合
 - [必須]  
-  定義するメソッド、プロパティは最小限にとどめること。
-  - 単純であるほど様々な場面で適用できる可能性を持たせることができる。
-  - 関連の薄いメソッドを複数定義するのは誤りである。それらは別々のインターフェースに  
-    分けて定義すること。
+  インターフェースが持つメソッド、プロパティは最小限にとどめること。
+  - 単純なインターフェースほど様々な場面で適用でき、実装クラスの再利用性が高くなる。
+  - 関連の薄いメソッドを1つのインターフェースに複数定義するのは単一責務の原則に反する。  
+    それらは別々のインターフェースに分けて定義すべきである。
 
 ## 実装する場合
 :red_circle: 特になし?
@@ -1400,6 +1516,12 @@
 - [任意]  
   ツールで自動生成されたクラスに対して拡張メソッドを定義してもよい。
 
+:red_circle: DIの場所
+- コンストラクタ
+  - ロガー
+  - ローカライズ
+- メソッド
+  - 暗号化、ハッシュ化
 
 :warning:
 ## Web Application
