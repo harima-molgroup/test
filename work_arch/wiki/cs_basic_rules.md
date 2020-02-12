@@ -112,7 +112,7 @@
   [デシマル（10進小数）](https://ufcpp.net/study/csharp/st_embeddedtype.html#decimal)  
   [浮動小数点型(実数型)](https://ufcpp.net/study/csharp/st_embeddedtype.html#float)
 
-## 文字型(char)、文字列型(string)
+## 文字型(char)、[文字列型(string)](https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/inside-a-program/coding-conventions#string-data-type)
 - [必須]  
   値の変更を伴って文字列を構成する場合は System.Text.StringBuilder を利用すること。
   - string への値の再設定を繰り返すと、そのたびに新しいメモリ領域に値が格納されるため、  
@@ -139,8 +139,45 @@
   フォーマット
 
 ## 論理値型(bool)
+- [必須]  
+  論理積(AND) の演算には[短絡評価 '&&'](https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/inside-a-program/coding-conventions#-and-124124-operators) を用いなければならない。  
+  :rage:
+  ``` csharp
+  // person.Friends.Length が 0 の場合でも後続の条件の値を計算する。
+  // --> 存在しない person.Friends[0] にアクセスしようとして System.IndexOutOfRangeException が発生する。
+  if (0 < person.Friends.Length & person.Friends[0].IsBestFriend){
+    ...
+  }
+  ```
+  :grin:
+  ``` csharp
+  // person.Friends.Length が 0 の場合、後続の条件の値を計算しない。
+  // --> 存在しない person.Friends[0] にアクセスせず、条件の値を false に確定させる。
+  if (0 < person.Friends.Length && person.Friends[0].IsBestFriend){
+    ...
+  }
+  ```
+- [必須]  
+  論理和(OR) の演算には[短絡評価 '||'](https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/inside-a-program/coding-conventions#-and-124124-operators) を用いなければならない。  
+  :rage:
+  ``` csharp
+  // order.Options が null の場合でも後続の条件の値を計算する。
+  // --> null値に対して Count プロパティにアクセスしようとして System.NullReferenceException が発生する。
+  if (order.Options == null | order.Options.Count == 0){
+    ...
+  }
+  ```
+  :grin:
+  ``` csharp
+  // order.Options が null の場合、後続の条件の値を計算しない。
+  // --> null値の Count プロパティにアクセスせず、条件の値を true に確定させる。
+  if (order.Options == null || order.Options.Count == 0){
+    ...
+  }
+  ```
 - [禁止]  
-  [Null許容のbool型を使用してはならない。](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/37/%E5%9F%BA%E6%9C%AC%E3%83%AB%E3%83%BC%E3%83%AB?anchor=null%E8%A8%B1%E5%AE%B9%E5%9E%8B&_a=edit)
+  [Null許容のbool型を使用してはならない。](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/37/%E5%9F%BA%E6%9C%AC%E3%83%AB%E3%83%BC%E3%83%AB?anchor=null%E8%A8%B1%E5%AE%B9%E5%9E%8B&_a=edit)  
+  - true/false/null の三値論理になってしまう。
 
 ## object型
 - [非推奨]  
@@ -893,7 +930,7 @@
     ```
     参照 :arrow_right: [コンパイラ エラー CS1061](https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/compiler-messages/cs1061)
 
-# クラス
+# [クラス](https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/classes-and-structs/)
 ---
 
 ## 宣言
@@ -1217,7 +1254,7 @@
   ```
 
 :warning:
-## メソッド
+## [メソッド](https://docs.microsoft.com/ja-jp/dotnet/csharp/programming-guide/classes-and-structs/methods)
 - [非推奨]  
   クラス内にprivateメソッドが増えすぎるのは望ましくない。
   - 単一責務の原則に従い、クラスを分割できないかを検討する。 
@@ -1401,7 +1438,8 @@
 
 :warning:
 ## コンストラクタ
-### ※ コンストラクタは本質的にはメソッドであるため、以下に特記する内容を除き、メソッドの項に準ずる。
+**※ コンストラクタはインスタンス初期化のための特別なメソッドと解釈することができるため、  
+　[メソッドと同様のルール](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/37/%E5%9F%BA%E6%9C%AC%E3%83%AB%E3%83%BC%E3%83%AB?anchor=%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89)に加え、以下に挙げるコンストラクタ特有のルールを適用する。**
 - [必須] :red_circle: 要検討  
   一部の例外的なクラスを除き、必ずデフォルトコンストラクタを実装すること。
   - 理由???
