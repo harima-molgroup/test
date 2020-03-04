@@ -13,20 +13,187 @@
 
 # 共通事項
 ---
-- 名前の一部に頭字語や略称が含まれる場合、長さが2文字の頭字語については大文字のみで書いてもよい。  
-  3文字以上のものは、一部の例外を除き先頭のみ大文字 (パスカルケース) とすること。  
+
+- [必須]  
+  名前には、より簡単な (誰もが知っている) あるいはなじみのある単語を用いること。  
+  
+  [例]  
+  :confounded: FetchWhatCustomerDeterminedToPurchase  
+  :grin: GetOrderedItems  
+
+- [推奨]  
+  その文脈において必要かつ十分に具体的な単語を用いて名前をつけること。  
 
   [例]  
-    :grin: UserID  
-    :grin: _userId  
-    :grin: DBContext  
-    :grin: DbContext  
-    :grin: BaseMvcController  
+  - 不正な入力によるエラーの通知欄のみメッセージ表示をもつ画面では...  
+  :confounded: text :arrow_right: ラベル??? 入力欄??? メッセージ???  
+  :grin: message :arrow_right: メッセージのようである。いまはエラー通知のみなのでそれとわかる。  
+  :grin: errorMessage :arrow_right: エラー通知とわかる。  
 
-    :confounded: Base**MVC**Controller
+    :warning:注意:warning:  
+    名前を message とした場合には、仕様変更により通知の種類が増えると判別がつかず、  
+    名前の変更が必要となる恐れがある。  
+
+  - 上記以外にもいろいろなエラーメッセージを扱う状況では...  
+  :confounded: message :arrow_right: なんのメッセージ???  
+  :confounded: errorMessage :arrow_right: なんのエラー通知???  
+  :grin: invalidInputMessage :arrow_right: 不正入力の通知とわかる。  
+
+  - 構造化された要素についてループ処理をしている場面では...  
+  :worried: item :arrow_right: 要素のようである。  
+  :grin: itemWithChild :arrow_right: 子持ちの要素で、子に関する処理がありそうだと推測可能。  
+
+  - :warning: 慣例に従って短く書くことにより逆に意図が明確となる場合も例外的に存在する。  
+
+    :grin:
+    ``` csharp
+    // ループカウンタ
+    for (var i = 0; i < items.Count; i++) { ... }
+
+    // 文字列操作
+    var sb = new StringBuilder();
+
+    // ファイルIO
+    using (var sr = new StreamReader(filePath)) { ... }
+
+    // 例外処理
+    try { ... } catch (Exception ex) { ... }
+    ```
+  
+  **どの程度具体的な名前をつけるかは場合により判断すること。**  
+
+  - 判断の基準
+    - 他のユーザが初めてそのコードを読むとき、内容を理解するために充分に具体的な情報を  
+    名前が提供しているか?  
+      - 名前の変更によってコードをより分かりやすくできるか?  
+      - コードについて質問を受けたときにきちんと説明できそうか? 申し訳なさを感じないか?  
+    - 3か月後、半年後に自分がそのコードを読む際、より具体的な名前にしておかなくてもすぐに内容を理解できそうか?  
+      - 過去の自分を恨むことがないか?  
+    - 複雑なロジックや特殊な文脈の下での処理において、名前が処理の説明になりうるか?  
+      - より具体的な名前に変更することによりコメントを減らすことができるか?  
+        :worried:
+        ``` csharp
+        var item = items
+                  .Where(i => i.Discounted && i.Category.ID == categories["book"].ID);
+        ```
+        :grin:
+        ``` csharp
+        var discountedBook = items
+                            .Where(i => i.Discounted && i.Category.ID == categories["book"].ID);
+        ```
+      - 名前の変更により、現在書いているコードが自然な英語に近づくか?  
+        :worried:
+        ``` csharp
+        if (item.SelectFlag) { ... }
+        ```
+        :grin:
+        ``` csharp
+        if (item.IsSelected) { ... }
+        ```
+    - 名前が長くなるのを避けたいというだけでは、具体的な表現を採用しない理由にはならない。  
+
+  - よい名前が見つからない場合や判断しかねる場合には積極的にチームメンバーに相談すること。  
+    巻き込まれた人を含め、命名に関する知識が蓄積されるのはチームにとって有益である。  
+    
+- [禁止]  
+  名前に含まれる単語をむやみに省略して書かないこと。    
+  - 省略の仕方に個人差があり、自分以外には分からない、あるいは理解しにくい可能性がある。  
+  - ある単語が複数の書き方で使われていると検索のコスト増や漏れの原因となる。  
+
+  [例]  
+  :grin:  userDbContext  
+  :confounded:  userDbCont  
+  :confounded:  userDbCon :arrow_right: Connection?  
+  :confounded:  usrDbCxt  
+  
+  :warning:注意:warning:  
+  流儀はいろいろある。例えば、Google のGo言語では短い名前を推奨している。  
+  
+  [参照]  
+  [Goの変数名が短い理由（あるいはGoがほかの言語と違う理由）](http://blog.sigbus.info/2014/09/go.html)  
+  [GoogleによるGoのbufioパッケージの実装](https://golang.org/src/bufio/bufio.go)  
+  [おまけ: Goのマスコット :ghost:](https://blog.golang.org/gopher)
+
+- [禁止]  
+  該当する単語が存在しない場合を除き、日本語のローマ字表記で名前をつけないこと
+  。  
+  - 読みづらい。  
+  - 「ちゃ」を "Cha" と書くか "tya" と書くかなど、表記に個人差がある。  
+
+  [例]  
+  :grin:  userReport  
+  :confounded:  userChohyo  
+  :confounded:  userChouhyou  
+  :confounded:  userTyohyo  
+
+- [推奨]  
+  以下では項目ごとに命名時の品詞を指定しているが、その品詞の句を用いて命名してもよい。  
+  該当する品詞の単語ひとつで内容を端的に表せない場合には、複数の単語を組み合わせて句とする方が望ましい。  
+
+  [例]  
+  :worried: count  
+  :grin: selectedItemCount  
+
+  :worried: id  
+  :grin: userID  
+  :grin: orderID  
+
+  :worried: Get  
+  :grin: GetSelectedItems  
+  :grin: GetUser  
+
+- [必須]  
+  名前が名詞のものは、その内容に応じて単数形と複数形の区別をつけること。  
+
+  [例]  
+  :grin:
+  ``` csharp
+  var items = _itemRepository.GetItems();
+  var item = items.FirstOrDefault();
+  ```
+  :confounded:  
+  ``` csharp
+  var datas = _repository.GetDatas();   // data はすでに複数形 (単数形 : datum)
+  ```
+
+- [任意]  
+  名前の一部に頭字語や略称などが含まれる場合、長さが2文字のものは大文字のみで書いてもよい。  
+
+  [例]  
+    :grin: User**ID**  
+    :grin: _user**Id**  
+    :grin: **DB**Context  
+    :grin: **Db**Context  
+    
+- [推奨]  
+  名前に含まれる3文字以上の頭字語や略称は、例外を除き先頭のみ大文字 (パスカルケース) とすること。  
+
+  [例]  
+    :grin: Base**Mvc**Controller  
+    :worried: Base**MVC**Controller
 
     :warning: 例外 :warning:  
     :grin: Molis.**SDK**.Account  
+
+- [禁止]  
+  名詞の形をとる名前において、"-Info" や "-Data" を用いないこと。  
+
+  クラスや変数など、ソースコードにおける命名対象はそもそも情報かつデータであるため、  
+  上記の命名は通常自明であり "-Info" や "-Data" は意味をなさない。  
+  さらに、例えばクラスに "-Info" や "-Data" という名前をつけた場合、そのクラスにふるまいを  
+  持たせると純粋な「情報」、「データ」とは言えなくなり、名前と実態の整合性が取れていると  
+  明言できない状態となってしまう (もっと悪いことに、上記のような命名をしたクラスは責務が曖昧なため  
+  肥大化しがちで、その結果、いつの間にか名前から内容が判断できない「とにかく何かのデータ」に  
+  なってしまうだろう)。
+
+  :warning: 例外 :warning:  
+  IETFによる技術標準やデファクトスタンダードにおいて上記に該当する名前が定められていることがある。  
+  そのような場合には標準に準拠した実装を行うために定められたとおりに命名すること。  
+  ※ この場合、標準にて "-Info" や "-Data" が実装方法も含め定められているため、曖昧さはない。
+
+  [例]  
+  [OpenID Connect Core 1.0 における UserInfo エンドポイント](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)  
+  :arrow_right: UserInfoController として実装する。
 
 # ソリューション構成要素 (論理的要素)
 
@@ -135,8 +302,8 @@
   :grin: UserService :arrow_right: ユーザ操作の取りまとめクラス  
   :grin: UserRepository :arrow_right: ストレージのユーザ情報へのアクセス窓口  
 
-  :japanese_ogre: UserManager :arrow_right: ユーザ管理をすべて担当するクラス    
-  :japanese_ogre: UserUtil :arrow_right: ユーザ関連の便利クラス  
+  :japanese_ogre: UserManager :arrow_right: ユーザ管理にまつわるありとあらゆることを受け持つクラス  
+  :japanese_ogre: UserUtil :arrow_right: ユーザ関連の便利メソッド集?  
 
   - **抽象クラス**  
     "Base" で始める。  
@@ -178,13 +345,13 @@
     ※ フィルタ属性も含む。  
     
     [例]  
-    :grin: XxxxFilterAttribute :red_circle:  
+    :grin: XxxxFilter**Attribute** :red_circle:  
 
   - **例外**  
     クラス名の末尾を "Exception" とする。  
     
     [例]  
-    :grin: XxxxException :red_circle:  
+    :grin: Xxxx**Exception** :red_circle:  
 
   - **拡張メソッド定義**  
     クラス名の末尾を "Extensions" とする。  
@@ -253,50 +420,121 @@
     :grin: UserDbContext.cs, UserDbContext_custom.cs   
     :neutral_face: OrderApiService.cs, OrderApiService2.cs   
 
-# メンバ :red_circle: ← タイトルこれでよい?
+# メンバ
 
 | 項目 | 記法 | 例 |
 | :--                     | :--: | :-- |
+| コンストラクタ           | パスカル | LoginViewModel |
 | プロパティ               | パスカル | ID, Name, Password, JwtCookie |
-| メソッド - 抽象メソッド   | パスカル |  |
-| メソッド - 非同期メソッド | パスカル | GetAllUsersAsync, AuthenticateAsync |
-| メソッド - コントローラアクション | パスカル |  |
-| メソッド - 判定メソッド   | パスカル |  |
-| メソッド - 拡張メソッド   | パスカル |  |
-| メソッド - テストメソッド | 日本語でおｋ |  |
-| 列挙子                  | キャメル | 保留 |
-| 定数                    | キャメル | 保留 |
+| メソッド                | パスカル |  |
+| 列挙子                  | パスカル | 保留 |
 | クラスフィールド         | キャメル |  |
+| クラスフィールド (読取専用)  | パスカル | 保留 |
 | インスタンスフィールド    | _ + キャメル |  |
 
+- **コンストラクタ**  
+  言語の規約により、クラスおよび構造体と同名でなければならない。  
+
 - **プロパティ**  
-  〇〇。
+  通常は名詞。  
+  
+  データの型がコレクションの場合は複数形、それ以外の場合、内容により単数 / 複数を判断する。  
+  クラスの内部状態を隠蔽することがプロパティの主な目的であるので、パスカルケースで  
+  フィールドと同様の名前をつけると考えて差支えない。
+  
+  - **述語プロパティ(bool型)**  
+    後述の述語メソッドと同様。  
+    述語プロパティは実質的に引数のない述語メソッドである。  
 
 - **メソッド**  
-  〇〇。
+  動詞で開始する。  
+  述語 (戻り値が bool のもの) 以外では通常、動詞は原形 (sなし) を用いる。  
+
+  多くの場合、動詞 + 名詞 (SVO の VO) の形となり、オブジェクト(S) が何 (O) をどうするか (V)  
+  を表す。このとき、名詞の部分は単数・複数も正確に選ぶこと。
+
+  [例]  
+  :grin: GetUser  
+  :grin: GenerateToken  
+  :red_circle: もう数件...
 
   - **抽象メソッド**  
-    クラス名の末尾を "Extensions" とする。  
+    通常のメソッドと同様。  
 
   - **非同期メソッド**  
-    クラス名の末尾を "Extensions" とする。  
+    メソッド名の末尾を "Async" とする。  
 
-  - **コントローラアクション**  
-    クラス名の末尾を "Extensions" とする。  
+    [例]  
+    :grin: GetUserAsync  
+    :grin: CreateUserSecretAsync  
+    :grin: AuthenticateAsync  
+    :confounded: GetUser  
 
-  - **判定メソッド**  
-    クラス名の末尾を "Extensions" とする。  
+  - **MVCコントローラアクション**  
+    ルーティングに従い名前をつける。  
+
+    [例]  
+    :grin: Index :arrow_right: ビューと同名  
+    :grin: Create :arrow_right: ビューと同名  
+    :grin: Edit :arrow_right: ビューと同名   
+    :grin: Delete :arrow_right: ビューと同名  
+    :grin: Login :arrow_right: 画面操作に対応した名前  
+    :grin: Search :arrow_right: 画面操作に対応した名前  
+
+  - **APIコントローラアクション**  
+    通常のメソッドと同様。  
+
+  - **述語メソッド**  
+    戻り値が bool型のメソッド。分岐の条件判定に用いられる。  
+    自動詞 + 形容詞 (SVC の VC、IsSomething など) または 他動詞 + 名詞 (SVO の VO、HasSomething など)  の形で、  
+    メソッド名が主語と述語からなる命題の述語部分となるようにする。  
+    Can や Could などの助動詞で開始してもよい。  
+
+    命題の述語部分であるため、  
+      - [ VC ] object.IsSomething :arrow_right: (オブジェクトは) ～である  
+      - [ VO ] object.DoSomething :arrow_right: (オブジェクトは) ～を行う  
+      - [ 助動詞 ] object.CanDoSomething :arrow_right: (オブジェクトは) ～ができる  
+
+    のように Yes / No で答えられる形となり、if文の条件判定に用いた場合に  
+    自然な英語に近いコードを書くことができる。
+
+    :grin: 
+    ``` csharp
+    // ECサイトの売り切れ商品用ガード節
+    if (item.IsSoldOut()) {
+      return false;
+    }
+    ...   // 在庫あり商品の処理
+    return true;
+
+    // 2つのオブジェクトの等値判定
+    if (item.Equals(anotherItem)) { ... }
+    
+    // 注文明細の取得 (明細有無チェックあり)  
+    var items = order.HasItem() ? order.Items : new List<Item>();
+    ```
+
+    :warning: 注意 :warning:  
+    あらゆる述語を Is～ としている例をたまに目にするが、NGである。
 
   - **拡張メソッド**  
-    クラス名の末尾を "Extensions" とする。  
+    通常のメソッドと同様。  
 
   - **テストメソッド**  
-    クラス名の末尾を "Extensions" とする。  
+    日本語でおk  
+    テストの内容を具体的に表す日本語をメソッド名とする。漢字も使用可能。  
+
+    XUnitではアノテーションと組み合わせることでさらに具体的にコードで  
+    テスト内容の説明を記述することができる。
+
+    [例]  
+    :grin:  引数がnullの時に例外をスローする  
+    :worried:  GetUserMethodTest_ThrowsExceptionForNullArgs  
 
 - **列挙子**  
-  〇〇。
+  整数型のプロパティと同様。  
 
-- **クラスフィールド (staticフィールド)**  
+- **クラスフィールド (静的フィールド、staticフィールド)**  
   〇〇。
 
   - **読取専用 (const / static readonly)**  
