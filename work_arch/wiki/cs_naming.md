@@ -23,11 +23,12 @@
 
 - [推奨]  
   その文脈において必要かつ十分に具体的な単語を用いて名前をつけること。  
+  項目ごとの命名規則では品詞を指定しているが、その品詞の句を用いて命名してもよい。
 
   [例]  
   - 不正な入力によるエラーの通知欄のみメッセージ表示をもつ画面では...  
   :confounded: text :arrow_right: ラベル??? 入力欄??? メッセージ???  
-  :grin: message :arrow_right: メッセージのようである。いまはエラー通知のみなのでそれとわかる。  
+  :grin: message :arrow_right: メッセージのようである。エラー通知のみの状況であればそれとわかる。  
   :grin: errorMessage :arrow_right: エラー通知とわかる。  
 
     :warning:注意:warning:  
@@ -49,7 +50,7 @@
     ``` csharp
     // ループカウンタ
     for (var i = 0; i < items.Count; i++) { ... }
-
+    
     // 文字列操作
     var sb = new StringBuilder();
 
@@ -112,21 +113,21 @@
   [参照]  
   [Goの変数名が短い理由（あるいはGoがほかの言語と違う理由）](http://blog.sigbus.info/2014/09/go.html)  
   [GoogleによるGoのbufioパッケージの実装](https://golang.org/src/bufio/bufio.go)  
-  [おまけ: Goのマスコット :ghost:](https://blog.golang.org/gopher)
+  [おまけ: マスコットのGo Gopher](https://write.kogus.org/articles/S78LHt)
 
 - [禁止]  
   該当する単語が存在しない場合を除き、日本語のローマ字表記で名前をつけないこと
   。  
   - 読みづらい。  
-  - 「ちゃ」を "Cha" と書くか "tya" と書くかなど、表記に個人差がある。  
+  - 「ちゃ」を "cha" と書いたり "tya" と書いたり、個人差がある。  
 
   [例]  
-  :grin:  userReport  
-  :confounded:  userChohyo  
-  :confounded:  userChouhyou  
-  :confounded:  userTyohyo  
+  :grin:  admin  
+  :grin:  administrator  
+  :confounded:  kanrisha  
+  :confounded:  kannrisya   
 
-- [推奨]  
+- [任意]  
   以下では項目ごとに命名時の品詞を指定しているが、その品詞の句を用いて命名してもよい。  
   該当する品詞の単語ひとつで内容を端的に表せない場合には、複数の単語を組み合わせて句とする方が望ましい。  
 
@@ -263,7 +264,7 @@
 - **インターフェース**  
   名詞、あるいは -able の形の形容詞。  
 
-  .Net Framework 以来の慣例に従い、" I " (大文字の i ) で始める。  
+  .Net Framework 以来の慣例に従い、Interface の頭文字である " I " で始める。  
 
   - クラスが特定の機能を持つことを保証するためのインターフェースでは、適切な動詞が存在する場合、  
   動詞 + "able" で終わる名前となるのが望ましい。  
@@ -427,10 +428,11 @@
 | コンストラクタ           | パスカル | LoginViewModel |
 | プロパティ               | パスカル | ID, Name, Password, JwtCookie |
 | メソッド                | パスカル |  |
-| 列挙子                  | パスカル | 保留 |
 | クラスフィールド         | キャメル |  |
-| クラスフィールド (読取専用)  | パスカル | 保留 |
+| クラスフィールド (読取専用)  | キャメル | 保留 |
+| クラスフィールド (定数)  | パスカル | 保留 |
 | インスタンスフィールド    | _ + キャメル |  |
+| 列挙子                  | パスカル | 保留 |
 
 - **コンストラクタ**  
   言語の規約により、クラスおよび構造体と同名でなければならない。  
@@ -439,12 +441,14 @@
   通常は名詞。  
   
   データの型がコレクションの場合は複数形、それ以外の場合、内容により単数 / 複数を判断する。  
-  クラスの内部状態を隠蔽することがプロパティの主な目的であるので、パスカルケースで  
-  フィールドと同様の名前をつけると考えて差支えない。
+  フィールド隠蔽のためのプロパティでは、フィールド名をパスカルケースで書けばよい。
   
   - **述語プロパティ(bool型)**  
     後述の述語メソッドと同様。  
     述語プロパティは実質的に引数のない述語メソッドである。  
+
+- **列挙子**  
+  整数型のプロパティと同様。  
 
 - **メソッド**  
   動詞で開始する。  
@@ -485,19 +489,25 @@
     通常のメソッドと同様。  
 
   - **述語メソッド**  
-    戻り値が bool型のメソッド。分岐の条件判定に用いられる。  
+    戻り値が bool型のメソッド。  
     自動詞 + 形容詞 (SVC の VC、IsSomething など) または 他動詞 + 名詞 (SVO の VO、HasSomething など)  の形で、  
     メソッド名が主語と述語からなる命題の述語部分となるようにする。  
-    Can や Could などの助動詞で開始してもよい。  
+    - 動詞は "s" で終わる三人称単数現在形にすると述語であると判別でき、かつ自然な命名となる。  
+    - Can などの助動詞で開始してもよい。  
+    - 否定形の (not を含む) 名前をつけないこと。
+    - なんでも Is～ としているのを目にすることがあるが、NGである。  
+      :weary: IsExist  
+      :grin: Exists
 
     命題の述語部分であるため、  
       - [ VC ] object.IsSomething :arrow_right: (オブジェクトは) ～である  
-      - [ VO ] object.DoSomething :arrow_right: (オブジェクトは) ～を行う  
+      - [ VO ] object.DoesSomething :arrow_right: (オブジェクトは) ～を行う  
       - [ 助動詞 ] object.CanDoSomething :arrow_right: (オブジェクトは) ～ができる  
 
     のように Yes / No で答えられる形となり、if文の条件判定に用いた場合に  
-    自然な英語に近いコードを書くことができる。
+    自然な英語に近いコードを書くことができる。  
 
+    [例]  
     :grin: 
     ``` csharp
     // ECサイトの売り切れ商品用ガード節
@@ -506,16 +516,17 @@
     }
     ...   // 在庫あり商品の処理
     return true;
-
+    ```
+    :grin: 
+    ``` csharp
     // 2つのオブジェクトの等値判定
     if (item.Equals(anotherItem)) { ... }
-    
+    ```
+    :grin: 
+    ``` csharp
     // 注文明細の取得 (明細有無チェックあり)  
     var items = order.HasItem() ? order.Items : new List<Item>();
     ```
-
-    :warning: 注意 :warning:  
-    あらゆる述語を Is～ としている例をたまに目にするが、NGである。
 
   - **拡張メソッド**  
     通常のメソッドと同様。  
@@ -531,47 +542,161 @@
     :grin:  引数がnullの時に例外をスローする  
     :worried:  GetUserMethodTest_ThrowsExceptionForNullArgs  
 
-- **列挙子**  
-  整数型のプロパティと同様。  
+- **クラスフィールド**  
+  通常は名詞。  
+  ※ bool型の場合は述語として述語メソッドと同様に命名する。  
+  どのような値なのかが理解できるような名前をつける。  
+  自身のクラス名を先頭に含めると冗長になるので、通常は含めないようにすること。  
 
-- **クラスフィールド (静的フィールド、staticフィールド)**  
-  〇〇。
+  [例]  
+  :worried: User.UserName  :red_circle: クラスフィールドとして自然な例???  
+  :grin: User.Name  
 
-  - **読取専用 (const / static readonly)**  
-    クラス名の末尾を "Extensions" とする。  
+  - **クラスフィールド (定数)**   
+    const フィールド。  
+    
+    宣言以外で定数に値を代入するコードを書いた場合には直ちにVisual Studioでビルドエラーとなる。  
+    そのため、「定数であること」が名前から明らかでなくても手違いで値が変更されてしまう  
+    不具合を招く恐れはない。  
+    :arrow_right: 記法はパスカルケース (先頭を大文字) とし、Shiftキーを押す手間を抑える。
+
+    [例]  
+    :confounded: XxxxViewModel.AAAA_BBBB_CCCC  
+    :confounded: XxxxViewModel.aaaaBbbbCccc  
+    :grin: XxxxViewModel.AaaaBbbbCccc  
+    
+  - **クラスフィールド (読取専用)**  
+    static readonly フィールド。  
+
+    読取専用クラスフィールドの値はプロパティ通してのみ外部に公開されるべきであるため、  
+    読取専用クラスフィールドは private または protected であることが前提となる。  
+    readonly なフィールドは定数と異なり値の代入はコンストラクタでも可能だが、  
+    やはりコンパイラが予期せぬ代入を防いでくれるため、「読み取り専用であること」は  
+    名前だけ見て判別できなくても問題とはならない。  
+    :arrow_right: 記法はキャメルケース (先頭を小文字) とし、定数と区別する。
+
+    [例]  
+    :confounded: UserController.JWT_COOKIE  
+    :confounded: UserController.JwtCookie  
+    :grin: UserController.jwtCookie  
 
 - **インスタンスフィールド**  
-  〇〇。
+  通常は名詞。  
+  ※ bool型の場合は述語として述語メソッドと同様に命名する。  
+  どのような値なのかが理解できるような名前をつける。  
+  自身のクラス名を先頭に含めると冗長になるので、通常は含めないようにすること。  
+
+  [例]  
+  :worried: user._userName  
+  :grin: user._name  
+
+  :confounded: user._userID  
+  :grin: user._id  
+  :grin: userSecret._userID  
+
+  インスタンスフィールドの値はプロパティ通してのみ外部に公開されるべきであるため、  
+  インスタンスフィールドは private または protected であることが前提となる。  
+  また、インスタンスフィールドの値をコンストラクタで初期化する際、コンストラクタの  
+  引数と名前が同じになってしまうと紛らわしいため (エラーとならない)、引数と名前が異なるが  
+  対応は明らかであるようしたい。  
+  :arrow_right: 記法はアンダースコア (" _ ") + キャメルケース (先頭を小文字) とする。  
+
+  [例]  
+  :grin: _accountService  
+  :grin: _userRepository  
+  :grin: _userDbContext  
+  :grin: _options  
 
 # 変数
 
 | 項目 | 記法 | 例 |
-| :--                      | :--: | :-- |
-| ローカル変数              | キャメル | name, value, count, prevItem |
-| ローカル変数 - ループカウンタ | キャメル | i, j, item, value |
-| パラメータ - メソッド     | キャメル | name, key |
-| パラメータ - ラムダ式     | キャメル | x, u, user, i, item |
-| パラメータ - 型パラメータ | パスカル | TKey |  
+| :--                | :--: | :-- |
+| ローカル変数        | キャメル | name, value, count, prevItem |
+| メソッドの引数    | キャメル | name, key |
+| ラムダ式の引数    | キャメル | name, key |
+| 型パラメータ        | パスカル | TKey |  
 
 - **ローカル変数**  
-  〇〇。
+  通常は名詞。  
+  ※ bool型の場合は述語として述語メソッドと同様に命名する。  
+  どのような値なのかが理解できるような名前をつける。  
+  変数を利用しているロジックの理解の助けになるような名前をつけられるとなおよい。
 
   - **ループカウンタ (for文)**  
-    クラス名の末尾を "Extensions" とする。  
+    ループ制御構文内で宣言する場合は、定義順に、i, j, k, ... でよい。  
+    - for文より前で定義されている変数をカウンタに利用する場合はローカル変数の命名規則に従う。
+    - 同階層の (入れ子になっていない) for文が複数ある場合、同じカウンタ変数を利用してよい。
+    - :warning: 3重を超える入れ子になる場合はロジックの見直しや処理のメソッドへの切り分けを検討する。
 
-  - **ループ要素 (foreach文)**  
-    クラス名の末尾を "Extensions" とする。  
+    [例]  
+    :rage:
+    ``` csharp
+    for (int i = 0; i < orders.Count; i++) {
+      // ビルドエラー
+      for (int i = 0; i < orders[i].Items.Count; i++) { ... }
+    }
+    ```
+    :grin:
+    ``` csharp
+    for (int i = 0; i < orders.Count; i++) {
+      for (int j = 0; j < orders[i].Items.Count; j++) { ... }
+    }
+    ```
+    :worried:
+    ``` csharp
+    for (int i = 0; i < orders.Length; i++) { ... }
+    for (int j = 0; j < orders[targetIndex].Items.Length; j++) { ... }
+    ```
+    :grin:
+    ``` csharp
+    for (int i = 0; i < orders.Length; i++) { ... }    
+    for (int i = 0; i < orders[targetIndex].Items.Length; i++) { ... }
+    ```
 
-- **パラメータ**  
-  〇〇。
+  - **逐次処理変数 (foreach文)**  
+    親コレクション名 (複数形) を単数形にする。  
+    文脈上、明らかな場合は単語をいくつか省略してもよい。  
 
-  - **メソッド引数**  
-    クラス名の末尾を "Extensions" とする。  
+    [例]  
+    :grin:
+    ``` csharp
+    foreach (string key in _httpContext.Request.Form.Keys) { ... }
+    ```
+    :grin:
+    ``` csharp
+    // ループ内で他のユーザの処理がなければ adminRoleUser はむしろ冗長
+    foreach (var user in viewModel.AdminRoleUsers) { ... }
+    ```
 
-  - **ラムダ式の引数**  
-    クラス名の末尾を "Extensions" とする。  
+- **メソッドの引数**  
+  ローカル変数と同様。  
+  参照渡し (out、ref) の場合に特別な区別をしなくてもよい。
 
-  - **型パラメータ**  
-    クラス名の末尾を "Extensions" とする。  
+- **ラムダ式の引数**  
+  小文字のアルファベット数文字で命名してよい (もちろん、通常の引数と同様の名前も可)。  
+  状況に応じて混乱する恐れがないようにする。  
 
+  - **LINQ to Lists (通常のコレクションに対してLINQを使用する場合)**  
+    1文字。通常は "x" でよい。  
+    区別したい場合には Item の " i " など、他の文字を使用しても問題ない。  
 
+    [例]  
+    :grin: items.Where(i => ... );  
+    :grin: items.Select(x => ... );  
+    :grin: items.OrderBy(item => ... );  
+
+  - **LINQ to Entities (Entity FrameworkでLINQを使用する場合)**  
+    モデルの型名に用いられているいくつかの単語の頭文字 (小文字) で命名してよい。  
+    
+    [例]  
+    :grin: _dbContext.Users.Where(u => ... );  
+    :grin: _dbContext.UserSecrets.FirstOrDefault(us => ... );  
+    :grin: _dbContext.UserRole.Any(ur => ... );  
+
+- **型パラメータ**  
+  通常は "T" (Type の頭文字) + 型を説明する名詞 で命名する。  
+  混乱の恐れがない場合は単に "T" でもよい。また、単語の略記も容認する。
+  
+  [例]  
+  :grin: public void DoSomething\<T>(T value) { ... }  
+  :grin: public TResult Calculate\<TParam, TResult>(TParam parameter) { ... }  
