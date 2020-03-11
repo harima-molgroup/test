@@ -1,8 +1,5 @@
 [[_TOC_]]
 
-# 参考リンク
----
-
 
 # 記法
 - 記法  
@@ -249,8 +246,7 @@
   実装とテストを分けるためのソリューションフォルダは、例外的に小文字で src, test とする。
   
   [例]  
-  :grin: :red_circle:  
-  :confounded: :red_circle:  
+  :red_circle: 該当なし  
 
 - **プロジェクト**    
   名詞。通常は単数形。  
@@ -415,13 +411,13 @@
     ※ フィルタ属性も含む。  
     
     [例]  
-    :grin: XxxxFilter**Attribute** :red_circle:  
+    :red_circle: 該当なし  
 
   - **例外**  
     クラス名の末尾を "Exception" とする。  
     
     [例]  
-    :grin: Xxxx**Exception** :red_circle:  
+    :red_circle: 該当なし  
 
   - **拡張メソッド定義**  
     クラス名の末尾を "Extensions" とする。  
@@ -429,8 +425,9 @@
     ※ 複数の拡張メソッドのコンテナであるため、**複数形**とする。  
     
     [例]  
-    :grin: Xxxx**Extensions** :red_circle:  
-    :worried:  Xxxx**Extension** :red_circle:  
+    :red_circle: 該当なし  
+    :grin: Xxxx**Extensions**  
+    :worried:  Xxxx**Extension**  
 
   - **テスト**  
     テスト対象のクラス名 + "Test" とする。
@@ -444,7 +441,7 @@
   クラス名と同様。  
 
   [例]  
-  :red_circle: TODO  
+  :red_circle: 該当なし  
 
   - **構造体**  
     クラス名と同様。  
