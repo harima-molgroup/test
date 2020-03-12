@@ -58,8 +58,16 @@
 # レイアウトサンプル
 
 :warning:サンプル中のコメントについて:warning:  
-- ブロックコメント ( /\* ～ */ ) :arrow_right: レイアウトの説明 (単行コメントとの区別のため、字下げ)
-- 単行コメント ( // ～ ) :arrow_right: 実際のコードに書くべきコメント
+- 実際のコードで必要なコメント
+  - XMLコメント ( /// \<summary> ～ )  
+    :arrow_right: クラスやメンバの説明。
+  - 単行コメント ( // ～ )  
+    :arrow_right: レイアウトの一貫として記載すべきコメント。
+    
+- 実際のコードでは不要なコメント  
+  - ブロックコメント ( /\* ～ */ )  
+    :arrow_right: サンプルを通した説明のために記載。本来必要なコメントとの区別のため、大きく字下げしてある。
+
 
 ``` csharp
 
@@ -104,8 +112,9 @@ namespace SampleApplication.Text
           *  ● 列挙体
           *  ● フィールド
           *    - 定数フィールド (const / static readonly)
-          *    - クラスフィールド (static)
-          *    - インスタンスフィールド
+          *    - 通常のフィールド
+          *      - クラスフィールド (static)
+          *      - インスタンスフィールド
           *  ● プロパティ
           *    - クラスプロパティ (static)
           *    - インスタンスプロパティ
@@ -226,6 +235,9 @@ namespace SampleApplication.Text
     #endregion
 
     #region コンストラクタ
+
+          /*** オーバーロードがある場合、同じregionにまとめる ***/
+    
     /// <summary>
     /// コンストラクタ
     /// </summary>
@@ -238,6 +250,7 @@ namespace SampleApplication.Text
 
     // staticメソッド
 
+          /*** ラベル: メソッド名 ***/
     #region GetOutputTypeFromSetting
     /// <summary>
     /// 結果の出力形式を設定ファイルから取得します。
