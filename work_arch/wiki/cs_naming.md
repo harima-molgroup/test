@@ -1,6 +1,5 @@
 [[_TOC_]]
 
-
 # 記法
 - 記法  
   以下の3種類の記法 (カッコ内は表中での表記) を主に用いる。記法の詳細は[用語集](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/45/%E7%94%A8%E8%AA%9E%E9%9B%86?anchor=%E8%AD%98%E5%88%A5%E5%AD%90%E5%90%8D%E3%81%AE%E8%A1%A8%E8%A8%98%E6%96%B9%E6%B3%95)を参照。
@@ -152,7 +151,7 @@
     よりよい実装の仕方を指摘してもらえることも期待できる。  
 
 - [任意]  
-  名前に含まれる3文字以上の頭字語や略称は、大文字のみで書いてもよい。  
+  名前に含まれる2文字の頭字語や略称は、大文字のみで書いてもよい。  
 
   [例]  
     :grin: User**ID**  
@@ -246,7 +245,8 @@
   実装とテストを分けるためのソリューションフォルダは、例外的に小文字で src, test とする。
   
   [例]  
-  :red_circle: 該当なし  
+  :grin: :red_circle:  
+  :confounded: :red_circle:  
 
 - **プロジェクト**    
   名詞。通常は単数形。  
@@ -411,13 +411,13 @@
     ※ フィルタ属性も含む。  
     
     [例]  
-    :red_circle: 該当なし  
+    :grin: XxxxFilter**Attribute** :red_circle:  
 
   - **例外**  
     クラス名の末尾を "Exception" とする。  
     
     [例]  
-    :red_circle: 該当なし  
+    :grin: Xxxx**Exception** :red_circle:  
 
   - **拡張メソッド定義**  
     クラス名の末尾を "Extensions" とする。  
@@ -425,9 +425,8 @@
     ※ 複数の拡張メソッドのコンテナであるため、**複数形**とする。  
     
     [例]  
-    :red_circle: 該当なし  
-    :grin: Xxxx**Extensions**  
-    :worried:  Xxxx**Extension**  
+    :grin: Xxxx**Extensions** :red_circle:  
+    :worried:  Xxxx**Extension** :red_circle:  
 
   - **テスト**  
     テスト対象のクラス名 + "Test" とする。
@@ -441,7 +440,7 @@
   クラス名と同様。  
 
   [例]  
-  :red_circle: 該当なし  
+  :red_circle: TODO  
 
   - **構造体**  
     クラス名と同様。  
