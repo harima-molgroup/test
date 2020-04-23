@@ -26,7 +26,7 @@
   :confounded:  kannrisya   
   
   :warning:例外:warning:  
-  以下のような場合は、相談の上、ローマ字表記を用いてよい。
+  以下のような場合は、相談の上、[ヘボン式](https://www.ezairyu.mofa.go.jp/passport/hebon.html)によるローマ字表記を用いてよい。
   - 該当する単語が存在しない場合
   - 極端になじみのない単語の使用が避けられない場合
   - その他、ローマ字表記の方が可読性がよくなる場合 (10文字以上の英単語をいくつも含むなど)
@@ -47,7 +47,7 @@
   :grin: GetSelectedItems  
   :grin: GetUser  
     
-- [非推奨]  
+- [禁止]  
   名前に含まれる単語をむやみに省略して書くのは望ましくない。    
   - 省略の仕方に個人差があり、自分以外には分からない、あるいは理解しにくい可能性がある。  
   - 前項のローマ字表記と同様のデメリットが生じるため、表記の揺らぎは避けたい。  
@@ -101,7 +101,7 @@
     :grin:
     ``` csharp
     // ループカウンタ
-    for (var i = 0; i < items.Count; i++) { ... }
+    for (int i = 0; i < items.Count; i++) { ... }
     
     // 文字列操作
     var sb = new StringBuilder();
@@ -220,7 +220,7 @@
 | 名前空間                  | パスカル (※) | AuthService.Controllers, Molis.SDK.Mvc |
 | インターフェース           | パスカル | IUser, IEncrypterFactory, ITokenGenerator, ISignable |
 | クラス                   | パスカル | HttpService, HttpServiceFactory, BaseEncrypter |
-| 値型                     | パスカル | 保留 |
+| 列挙型                     | パスカル | DayOfWeek, FileAccess |
 
 - **アセンブリ**  
   プロジェクトのルート名前空間をアセンブリ名とする。  
@@ -243,10 +243,6 @@
 
   ソリューションフォルダにまとめるプロジェクト群のグループ名をつける。  
   実装とテストを分けるためのソリューションフォルダは、例外的に小文字で src, test とする。
-  
-  [例]  
-  :grin: :red_circle:  
-  :confounded: :red_circle:  
 
 - **プロジェクト**    
   名詞。通常は単数形。  
@@ -399,25 +395,30 @@
     :confounded: UserCtrl  
 
   - **ビューモデル**  
-    クラス名の末尾を "ViewModel" とする。  
+    クラス名の末尾を "ViewModel" としなくてもよい。  
+    - 開発基盤の構造上、ビューモデルを実装することになるWebアプリケーションにおいて、  
+      ビューモデルクラスの名前が "～ViewModel" となっていなくても、他のクラスと  
+      名前が衝突するリスクが低いため。
+    - "～ViewModel" という名前のビューモデルクラスは、特定のビュー専用のビューモデル  
+      であるという印象があり、複数の画面において利用される場合に違和感が生じるため。
     
     [例]  
-    :grin: User**ViewModel**  
-    :grin: Login**ViewModel**  
+    :grin: User  
+    :grin: Login  
 
   - **属性**  
     クラス名の末尾を "Attribute" とする。  
-    ※ .NET Framework 以来の慣例。  
+    ※ .NET Core の規約。  
     ※ フィルタ属性も含む。  
     
     [例]  
-    :grin: XxxxFilter**Attribute** :red_circle:  
+    :grin: InputValidationFilter**Attribute**
 
   - **例外**  
     クラス名の末尾を "Exception" とする。  
     
     [例]  
-    :grin: Xxxx**Exception** :red_circle:  
+    :grin: InvalidInput**Exception**  
 
   - **拡張メソッド定義**  
     クラス名の末尾を "Extensions" とする。  
@@ -425,8 +426,8 @@
     ※ 複数の拡張メソッドのコンテナであるため、**複数形**とする。  
     
     [例]  
-    :grin: Xxxx**Extensions** :red_circle:  
-    :worried:  Xxxx**Extension** :red_circle:  
+    :grin: ViewModel**Extensions**  
+    :worried:  ViewModel**Extension**  
 
   - **テスト**  
     テスト対象のクラス名 + "Test" とする。
@@ -436,17 +437,13 @@
     対象クラス :arrow_right: Molis.SDK.Http.Uri.**Query**  
     テストクラス :arrow_right: Testing.UnitTest.Http.Uri.**QueryTest**  
 
-- **値型**  
+- **列挙型**  
   クラス名と同様。  
 
   [例]  
-  :red_circle: TODO  
-
-  - **構造体**  
-    クラス名と同様。  
-
-  - **列挙体**  
-    クラス名と同様。  
+  :grin: DayOfWeek  
+  :grin: FileAccess
+   
 
 # ソリューション構成要素の実体 (物理的要素)
 
@@ -496,14 +493,14 @@
 
 | 項目 | 記法 | 例 |
 | :--                     | :--: | :-- |
-| コンストラクタ           | パスカル | LoginViewModel |
+| コンストラクタ           | パスカル | LoginController |
 | プロパティ               | パスカル | ID, Name, Password, JwtCookie |
-| メソッド                | パスカル |  |
-| クラスフィールド         | キャメル |  |
-| クラスフィールド (定数)  | パスカル | 保留 |
-| クラスフィールド (読取専用)  | パスカル | 保留 |
-| インスタンスフィールド    | _ + キャメル |  |
-| 列挙子                  | パスカル | 保留 |
+| メソッド                | パスカル | Authenticate, GetUserAsync |
+| クラスフィールド         | _ + キャメル | _staticField |
+| クラスフィールド (定数)  | パスカル | Separator, DefaultMask |
+| クラスフィールド (読取専用)  | パスカル | DefaultEncoding, NullChar |
+| インスタンスフィールド    | _ + キャメル | _id, _name, _password, _jwtCookie |
+| 列挙子                  | パスカル | Monday, Tuesday, Read, Write |
 
 - **コンストラクタ**  
   C#の言語仕様により、クラスおよび構造体と同名でなければならない。  
@@ -536,7 +533,6 @@
   :grin: GetUser  
   :grin: GenerateToken  
   :grin: Create :arrow_right: ファクトリーパターンではこれだけでもイディオムとして問題ない。  
-  :red_circle: もう数件...
 
   - **抽象メソッド**  
     通常のメソッドと同様。  
@@ -624,10 +620,6 @@
   ※ bool型の場合は述語として述語メソッドと同様に命名する。  
   どのような値なのかが理解できるような名前をつける。  
   自身のクラス名を先頭に含めると記述が冗長になるので、通常は含めないようにすること。  
-
-  [例]  
-  :worried: User.UserName  :red_circle: クラスフィールドとして自然な例???  
-  :grin: User.Name  
 
   - **クラスフィールド (定数)**   
     const フィールド。  

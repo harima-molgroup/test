@@ -10,10 +10,6 @@
 # 共通事項
 レイアウトに関して、全体に共通する事項をまとめる。  
 :warning: 具体例や例外的なケースについては[レイアウトサンプル](https://dev.azure.com/A04904419/ISBMO%20Developer%20Potal/_wiki/wikis/ISBMO-Developer-Potal.wiki/41/%E3%83%AC%E3%82%A4%E3%82%A2%E3%82%A6%E3%83%88%E8%A6%8F%E5%89%87?anchor=%E3%83%AC%E3%82%A4%E3%82%A2%E3%82%A6%E3%83%88%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB)を参照。
-
-## Visual Studio設定
-- [推奨]  
-  :red_circle: 何か書く
   
 ## Visual Studioによる自動フォーマット機能
 - [必須]  
